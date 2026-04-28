@@ -52,14 +52,8 @@ function Footer () {
           </Link>
         </div>
       </div>
-
-      
-
-      <div className="border-t border-gray-800 mt-10 pt-6 text-center text-sm">
-        © {new Date().getFullYear()} Solar Flare Esports. All rights reserved.
-      </div>
     </footer>
-    )
+  )
 }
 
 export default Footer;   
