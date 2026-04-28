@@ -1,83 +1,96 @@
-import { Link } from 'react-router-dom'; 
-import { useState } from "react";
 import SlfLogo from '../assets/Logos/RedLogo.png';
+import { useState, useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { navLinks } from '../data/siteData'
 
-const Navbar = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const toggleMenu = () => {
-    setIsOpen(!isOpen);
-    };
-    return (
-    <header>
-     <nav className="flex justify-between px-4 md:px-12 items-center bg-[#0c0c0f] text-white font-bold border-b border-gray-800 shadow-md">
+export default function Navbar() {
+  const [scrolled, setScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const location = useLocation()
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  const isActive = (href: string) => location.pathname === href
+  const closeMenu = () => setMenuOpen(false)
+
+  return (
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 md:px-12 h-17 transition-all duration-300 ${
+        scrolled
+          ? 'bg-sf-darker/95 backdrop-blur-md border-b border-sf-border'
+          : 'bg-transparent'
+      }`}
+    >
+      <Link to="/" className="flex items-center gap-2.5 group" onClick={closeMenu}>
         <div>
-            <Link to="/Home"><img src={SlfLogo} alt="Solar Flare Esports Logo" className="w-16 h-16 m-4 cursor-pointer" /></Link>
+            <img src={SlfLogo} alt="Solar Flare Logo" className="w-10 h-10 object-contain group-hover:brightness-110 transition-filter duration-200" />
         </div>
+        <span className="font-condensed font-black text-xl tracking-widest uppercase text-sf-text">
+          Solar Flare
+        </span>
+      </Link>
 
-        <div style={{ fontFamily: "Poppins, sans-serif" }}>
-            <ul className="hidden md:flex items-center gap-6 p-8">
-               <li className="hover:text-[#ff6a00] transition duration-300">
-                <Link to="/Shop" className=''>SHOP</Link>
-               </li>
-                <li className="hover:text-[#ff6a00] transition duration-300">
-                <Link to="/About" className=''>ABOUT</Link>
-               </li>
-               <li className="hover:text-[#ff6a00] transition duration-300">
-                <Link to="/Teams" className=''>TEAMS</Link>
-               </li>
-               <li className="hover:text-[#ff6a00] transition duration-300">
-                <Link to="/SLFZone" className=''>SLF.ZONE</Link>
-               </li>
-               <li className="hover:text-[#ff6a00] transition duration-300">
-                <Link to="/Partners" className=''>PARTNERS</Link>
-               </li>
-               <li className="hover:text-[#ff6a00] transition duration-300">
-                <Link to="/Media" className=''>MEDIA</Link>
-               </li>
-               <li className="hover:text-[#ff6a00] transition duration-300">
-                <Link to="/FlameSociety" className=''>FLAME SOCIETY</Link>
-               </li>
-            </ul>
+      <div className="hidden md:flex items-center gap-8">
+        {navLinks.map((link) => (
+          <Link
+            key={link.label}
+            to={link.href}
+            className={`text-[11px] font-semibold tracking-[0.12em] uppercase transition-colors duration-200 ${
+              isActive(link.href)
+                ? 'text-sf-text'
+                : 'text-sf-muted hover:text-sf-text'
+            }`}
+          >
+            {link.label}
+          </Link>
+        ))}
+        <Link
+          to="/shop"
+          className="text-[11px] font-bold tracking-[0.14em] uppercase text-white bg-sf-orange px-5 py-2 hover:bg-orange-500 transition-colors duration-200"
+        >
+          Shop
+        </Link>
+      </div>
+
+      <button
+        className="md:hidden flex flex-col gap-1.5 p-1"
+        onClick={() => setMenuOpen((prev) => !prev)}
+        aria-label="Toggle menu"
+      >
+        <span className={`block w-6 h-0.5 bg-sf-text transition-all duration-200 ${menuOpen ? 'rotate-45 translate-y-2' : ''}`} />
+        <span className={`block w-6 h-0.5 bg-sf-text transition-all duration-200 ${menuOpen ? 'opacity-0' : ''}`} />
+        <span className={`block w-6 h-0.5 bg-sf-text transition-all duration-200 ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+      </button>
+
+      {menuOpen && (
+        <div className="absolute top-17 left-0 right-0 bg-sf-darker border-b border-sf-border md:hidden">
+          <div className="flex flex-col px-8 py-6 gap-5 bg-[#ff8800]">
+            {navLinks.map((link) => (
+              <Link
+                key={link.label}
+                to={link.href}
+                onClick={closeMenu}
+                className={`text-[12px] font-semibold tracking-[0.12em] uppercase transition-colors ${
+                  isActive(link.href) ? 'text-sf-text' : 'text-sf-muted hover:text-sf-text'
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+            <Link
+              to="/shop"
+              onClick={closeMenu}
+              className="text-[11px] font-bold tracking-[0.14em] uppercase text-white bg-sf-orange px-5 py-2.5 text-center"
+            >
+              Shop
+            </Link>
+          </div>
         </div>
-        
-        <div className='lg:hidden' onClick={toggleMenu}>
-            {!isOpen && (
-                <div>
-                    <i className="ri-menu-line text-[25px] text-[#ff6a00] cursor-pointer"></i>
-                </div>
-            )}
-
-            {isOpen && (
-                <div onClick={toggleMenu} >
-                    <i className="ri-close-large-line text-[25px] text-[#ff6a00] cursor-pointer"></i>
-                </div>
-            )}
-
-            {isOpen ? (
-                <aside className='sidebar bg-[#ff6a00] fixed top-24 left-0 w-full shadow-2xl z-10'>
-                    <div>
-                        <ul className='flex flex-col gap-4 p-8 font-medium'>
-                            <Link to="/Home">HOME</Link>
-                            <Link to="/Partners">PARTNERS</Link>
-                            <Link to="/Teams">TEAMS</Link>
-                            <Link to="/Media">MEDIA</Link>
-                            <Link to="/FlameSociety">FLAME SOCIETY</Link>
-                            <Link to="/Shop">SHOP</Link>
-                            <Link to="/About">ABOUT</Link>
-                            <Link to="/SLFZone">SLF.ZONE</Link>
-                            <Link to="/Championships">CHAMPIONSHIPS</Link>
-                            <Link to="/Investor">INVESTOR</Link>
-                            <Link to="/ManagementTeam">MANAGEMENT TEAM</Link>
-                            <Link to="/Contact">CONTACT</Link>
-
-                        </ul>
-                    </div>
-                </aside>
-            ) : null}
-        </div>
-      </nav>
-      </header>
-    )
+      )}
+    </nav>
+  )
 }
-
-export default Navbar;
