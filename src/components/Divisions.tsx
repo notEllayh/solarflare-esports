@@ -2,26 +2,34 @@
 // import freefireTeamImage from '../assets/TeamImages/FF_Team.JPG'; 
 // import chessTeam from '../assets/TeamImages/Tennyson.JPG'; 
 // import { Link } from 'react-router-dom';
+
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { divisions, type Division } from '../data/siteData'
 
 function DivisionCard({ division }: { division: Division }) {
   const [hovered, setHovered] = useState(false)
 
   return (
-    <div
-      className="relative aspect-4/3 overflow-hidden bg-sf-surface cursor-pointer"
+    <Link
+      to={`/teams/${division.id}`}
+      className="relative block overflow-hidden bg-sf-surface group"
+      style={{ aspectRatio: '4/3' }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
+      {/* Background emoji */}
       <div
-        className={`absolute inset-0 flex items-center justify-center text-[80px] transition-all duration-500 ${
-          hovered ? 'opacity-[0.14] scale-110' : 'opacity-[0.07] scale-100'
-        }`}
+        className="absolute inset-0 flex items-center justify-center text-[80px] pointer-events-none select-none transition-all duration-500"
+        style={{
+          opacity: hovered ? 0.14 : 0.07,
+          transform: hovered ? 'scale(1.1)' : 'scale(1)',
+        }}
       >
         {division.emoji}
       </div>
 
+      {/* Left accent bar */}
       <div
         className="absolute top-0 left-0 w-0.75 transition-all duration-300 ease-out"
         style={{
@@ -30,9 +38,25 @@ function DivisionCard({ division }: { division: Division }) {
         }}
       />
 
+      {/* Bottom arrow indicator */}
+      <div
+        className="absolute top-4 right-4 w-8 h-8 border border-white/10 flex items-center justify-center text-sf-muted text-sm transition-all duration-200"
+        style={{
+          opacity: hovered ? 1 : 0,
+          background: hovered ? '#FF6A00' : 'transparent',
+          borderColor: hovered ? '#FF6A00' : 'rgba(255,255,255,0.1)',
+          color: hovered ? '#fff' : '#888884',
+        }}
+      >
+        →
+      </div>
+
+      {/* Content */}
       <div
         className="absolute inset-0 flex flex-col justify-end p-7"
-        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%)' }}
+        style={{
+          background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%)',
+        }}
       >
         <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-sf-orange mb-1.5">
           {division.category}
@@ -40,30 +64,53 @@ function DivisionCard({ division }: { division: Division }) {
         <h3 className="font-condensed font-black text-[28px] uppercase leading-none text-sf-text">
           {division.game}
         </h3>
-        <p className="text-sf-muted text-[12px] mt-1.5">
-          {division.playerCount} Players · {division.league}
-        </p>
+        <div className="flex items-center justify-between mt-2">
+          <p className="text-sf-muted text-[12px]">
+            {division.playerCount} Players · {division.league}
+          </p>
+          <p
+            className="text-[10px] font-bold tracking-widest uppercase transition-all duration-200"
+            style={{
+              opacity: hovered ? 1 : 0,
+              color: '#FF6A00',
+            }}
+          >
+            View Team
+          </p>
+        </div>
       </div>
-    </div>
+    </Link>
   )
 }
 
 export default function Divisions() {
   return (
     <section id="teams" className="max-w-275 mx-auto px-6 md:px-12 py-24">
-      <p className="text-[11px] font-bold tracking-[0.15em] uppercase text-sf-orange mb-3">
-        Our Divisions
-      </p>
-      <h2
-        className="font-condensed font-black uppercase leading-[0.95] mb-5"
-        style={{ fontSize: 'clamp(36px, 5vw, 60px)' }}
-      >
-        Where We<br />Compete
-      </h2>
-      <p className="text-sf-muted text-[15px] max-w-md leading-relaxed">
+      <div className="flex items-end justify-between mb-5">
+        <div>
+          <p className="text-[11px] font-bold tracking-[0.15em] uppercase text-sf-orange mb-3">
+            Our Divisions
+          </p>
+          <h2
+            className="font-condensed font-black uppercase leading-[0.95]"
+            style={{ fontSize: 'clamp(36px, 5vw, 60px)' }}
+          >
+            Where We<br />Compete
+          </h2>
+        </div>
+        <Link
+          to="/teams"
+          className="hidden md:inline-flex items-center gap-2 px-6 py-3 border border-white/15 text-sf-text text-[11px] font-bold tracking-[0.12em] uppercase hover:border-white/40 transition-colors duration-200"
+        >
+          All Teams →
+        </Link>
+      </div>
+
+      <p className="text-sf-muted text-[15px] max-w-md leading-relaxed mb-14">
         Four elite squads. One mission. Solar Flare fields world-class rosters across the biggest titles on the planet.
       </p>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-0.5 mt-14">
+
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-0.5">
         {divisions.map((d) => (
           <DivisionCard key={d.id} division={d} />
         ))}

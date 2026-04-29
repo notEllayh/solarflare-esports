@@ -1,12 +1,15 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { players, type Player } from '../data/siteData'
 
 function PlayerCard({ player }: { player: Player }) {
   const [imgError, setImgError] = useState(false)
 
   return (
-    <div className="relative bg-sf-surface overflow-hidden cursor-pointer group hover:bg-[#222226] transition-colors duration-200">
-      {/* Image area */}
+    <Link
+      to={`/roster/${player.id}`}
+      className="relative bg-sf-surface overflow-hidden group hover:bg-[#222226] transition-colors duration-200 block"
+    >
       <div
         className="w-full relative overflow-hidden bg-sf-mid"
         style={{ aspectRatio: '3/4' }}
@@ -15,14 +18,10 @@ function PlayerCard({ player }: { player: Player }) {
           <img
             src={player.image}
             alt={player.alias}
-            onError={(e) => {
-                console.error('Image failed to load:', player.image, e)
-                setImgError(true)
-            }}
+            onError={() => setImgError(true)}
             className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          /* Fallback if image fails to load */
           <div className="w-full h-full flex items-center justify-center bg-sf-mid">
             <span className="font-condensed font-black text-[64px] text-white/10 select-none">
               {player.alias.charAt(0)}
@@ -35,13 +34,19 @@ function PlayerCard({ player }: { player: Player }) {
           {player.country}
         </div>
 
-        {/* Bottom gradient fade into card */}
+        {/* Arrow on hover */}
+        <div
+          className="absolute top-3 left-3 w-7 h-7 flex items-center justify-center text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          style={{ background: 'linear-gradient(135deg, #FF6A00, #FFB800)' }}
+        >
+          →
+        </div>
+
         <div
           className="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none"
           style={{ background: 'linear-gradient(to top, #1C1C1F 0%, rgba(28,28,31,0.6) 50%, transparent 100%)' }}
         />
 
-        {/* Alias overlaid on image */}
         <div className="absolute bottom-0 left-0 right-0 px-4 pb-3">
           <h3 className="font-condensed font-black text-[26px] uppercase leading-none text-sf-text tracking-wide">
             {player.alias}
@@ -49,7 +54,6 @@ function PlayerCard({ player }: { player: Player }) {
         </div>
       </div>
 
-      {/* Info below image */}
       <div className="px-4 pt-3 pb-5">
         <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-sf-orange mb-0.5">
           {player.role} · {player.division}
@@ -59,12 +63,11 @@ function PlayerCard({ player }: { player: Player }) {
         </p>
       </div>
 
-      {/* Bottom accent bar */}
       <div
         className="absolute bottom-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
         style={{ background: 'linear-gradient(90deg, #FF6A00, #FFB800)' }}
       />
-    </div>
+    </Link>
   )
 }
 
@@ -83,12 +86,12 @@ export default function Roster() {
             The<br />Flare Squad
           </h2>
         </div>
-        <a
-          href="#"
+        <Link
+          to="/roster"
           className="hidden md:inline-block px-7 py-3 text-sf-text text-[11px] font-bold tracking-[0.12em] uppercase border border-white/15 hover:border-white/40 transition-colors duration-200 whitespace-nowrap"
         >
           Full Roster →
-        </a>
+        </Link>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-0.5">
@@ -98,4 +101,4 @@ export default function Roster() {
       </div>
     </section>
   )
-}
+} 

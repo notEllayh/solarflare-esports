@@ -1,3 +1,4 @@
+import SEO from '../components/SEO'
 import { useState } from 'react'
 import { products, shopCategories, type Product } from '../data/siteData'
 import PageHero from '../components/PageHero'
@@ -13,7 +14,7 @@ function ProductCard({ product }: { product: Product }) {
     >
       {/* Badge */}
       {product.badge && (
-        <div className="absolute top-3 left-3 z-10 text-[10px] font-bold tracking-[0.1em] uppercase px-2.5 py-1 bg-sf-orange text-white">
+        <div className="absolute top-3 left-3 z-10 text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 bg-sf-orange text-white">
           {product.badge}
         </div>
       )}
@@ -49,7 +50,7 @@ function ProductCard({ product }: { product: Product }) {
 
       {/* Info */}
       <div className="p-4">
-        <p className="text-[10px] font-semibold tracking-[0.1em] uppercase text-sf-muted mb-1">
+        <p className="text-[10px] font-semibold tracking-widest uppercase text-sf-muted mb-1">
           {product.category}
         </p>
         <h3 className="font-condensed font-bold text-[18px] uppercase leading-tight text-sf-text mb-2">
@@ -69,7 +70,7 @@ function ProductCard({ product }: { product: Product }) {
 
       {/* Bottom accent */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+        className="absolute bottom-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
         style={{ background: 'linear-gradient(90deg, #FF6A00, #FFB800)' }}
       />
     </div>
@@ -85,13 +86,19 @@ export default function ShopPage() {
 
   return (
     <>
+    <SEO
+     url="/shop"
+     title="Merch Store"
+     description="Official Solar Flare Esports merchandise — jerseys, apparel, gaming gear and accessories."
+     />
+
       <PageHero
         eyebrow="Official Store"
         title="Merch & Gear"
         subtitle="Rep the flare. Official Solar Flare jerseys, apparel, and gaming gear."
       />
 
-      <section className="max-w-[1100px] mx-auto px-6 md:px-12 py-16">
+      <section className="max-w-275 mx-auto px-6 md:px-12 py-16">
         {/* Category filter */}
         <div className="flex gap-2 flex-wrap mb-12">
           {shopCategories.map((cat) => (
@@ -110,7 +117,7 @@ export default function ShopPage() {
         </div>
 
         {/* Product grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[2px]">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-0.5">
           {filtered.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
@@ -127,7 +134,7 @@ export default function ShopPage() {
 
       {/* Promo banner */}
       <div
-        className="mx-6 md:mx-12 mb-16 max-w-[1100px] md:mx-auto p-10 md:p-14 relative overflow-hidden"
+        className="mx-6 md:mx-auto mb-16 max-w-275 p-10 md:p-14 relative overflow-hidden"
         style={{ background: 'linear-gradient(135deg, #FF6A00 0%, #FFB800 100%)' }}
       >
         <div
@@ -146,11 +153,11 @@ export default function ShopPage() {
               Pro Kit 2026<br />Now Available
             </h3>
           </div>
-          <button className="flex-shrink-0 bg-sf-darker text-white text-[12px] font-bold tracking-[0.14em] uppercase px-8 py-4 hover:bg-sf-mid transition-colors duration-200">
+          <button className="shrink-0 bg-sf-darker text-white text-[12px] font-bold tracking-[0.14em] uppercase px-8 py-4 hover:bg-sf-mid transition-colors duration-200">
             Shop the Drop
           </button>
         </div>
       </div>
     </>
   )
-}
+} 

@@ -22,4 +22,9 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+
+  /* Prevent layout shift during page transitions */
+  [data-framer-component-type] {
+    will-change: opacity, transform;
+  }
 }

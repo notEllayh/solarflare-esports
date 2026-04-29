@@ -1,5 +1,5 @@
 //import SlfLogo from '../assets/Logos/RedLogo.png';
-
+import SEO from '../components/SEO'
 import { useState } from 'react'
 import { membershipTiers, fanPerks, type MembershipTier } from '../data/siteData'
 
@@ -100,6 +100,11 @@ export default function FlameSocietyPage() {
 
   return (
     <div className="bg-sf-darker">
+      <SEO
+        url="/flame-society"
+        title="Flame Society"
+        description="Join the official Solar Flare fan membership. Exclusive access, member perks, and a community of thousands who burn as bright as we do."
+      />
       {/* Hero — custom, not PageHero */}
       <div className="relative min-h-[55vh] flex flex-col items-center justify-center text-center overflow-hidden pt-17 px-6">
         <div

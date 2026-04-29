@@ -1,3 +1,4 @@
+import SEO from '../components/SEO'
 import { useState } from 'react'
 import { contactDepartments } from '../data/siteData'
 import PageHero from '../components/PageHero'
@@ -66,6 +67,11 @@ export default function ContactPage() {
         eyebrow="Get in Touch"
         title="Contact Us"
         subtitle="Whether it's business, press, or just a question — we're here."
+      />
+      <SEO
+        url="/contact"
+        title="Contact Us"
+        description="Get in touch with Solar Flare Esports for business inquiries, press, or general questions."
       />
 
       <section className="max-w-275 mx-auto px-6 md:px-12 py-16">

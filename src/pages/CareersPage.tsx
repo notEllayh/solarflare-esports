@@ -1,3 +1,4 @@
+import SEO from '../components/SEO'
 import { useState } from 'react'
 import { jobRoles, departments, type JobRole } from '../data/siteData'
 import PageHero from '../components/PageHero'
@@ -79,6 +80,11 @@ export default function CareersPage() {
         eyebrow="Join the Team"
         title="Careers"
         subtitle="We're building something special. Come be part of it."
+      />
+      <SEO
+        url="/careers"
+        title="Careers"
+        description="Join Solar Flare Esports. View open roles across coaching, media, commercial, performance and creative departments."
       />
 
       <section className="max-w-275 mx-auto px-6 md:px-12 py-16">

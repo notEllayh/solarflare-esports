@@ -5,14 +5,12 @@ import { Link } from 'react-router-dom'
 
 const footerNav = {
   Teams: [
-    { label: 'Valorant',         href: '/teams' },
-    { label: 'League of Legends',href: '/teams' },
-    { label: 'CS2',              href: '/teams' },
-    { label: 'Apex Legends',     href: '/teams' },
-    { label: 'EA FC 25',         href: '/teams' },
-    { label: 'Mobile Legends',   href: '/teams' },
+    { label: 'Free Fire',         href: '/teams/freefire' },
+    { label: 'Chess',href: '/teams/chess' },
+    { label: 'Efootball', href: '/teams/efootball' },
+    { label: 'EA FC 26', href: '/teams/fc' },
   ],
-  Organisation: [
+  Company: [
     { label: 'About Us',  href: '/about' },
     { label: 'Careers',   href: '/careers' },
     { label: 'Press',     href: '/contact' },
@@ -21,10 +19,10 @@ const footerNav = {
   ],
   Community: [
     { label: 'Flame Society', href: '/flame-society' },
-    { label: 'Fan Hub',       href: '/flame-society' },
     { label: 'Discord',       href: 'https://discord.com' },
     { label: 'Merch Store',   href: '/shop' },
     { label: 'Events',        href: '/news' },
+    { label: 'Gallery',       href: '/gallery' },
   ],
   Support: [
     { label: 'FAQ',             href: '/contact' },
@@ -187,7 +185,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-5">
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
             <p className="text-[11px] text-sf-muted/50 tracking-wide">
-              © {year} Solar Flare Esports Ltd. All rights reserved.
+              © {year} Solar Flare Digital Limited. All rights reserved.
             </p>
             {/* Region */}
             <div className="flex items-center gap-1.5 text-[11px] text-sf-muted/40">
