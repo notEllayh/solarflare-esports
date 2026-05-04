@@ -1,38 +1,44 @@
 import SEO from '../components/SEO'
+import { api } from '../lib/api'
 import { useState } from 'react'
 import { contactDepartments } from '../data/siteData'
 import PageHero from '../components/PageHero'
 
 type FormState = {
-  name: string
-  email: string
+  name:       string
+  email:      string
   department: string
-  subject: string
-  message: string
+  subject:    string
+  message:    string
+}
+
+type FormErrors = Partial<FormState> & {
+  apiError?: string
 }
 
 const initialForm: FormState = {
-  name: '',
-  email: '',
+  name:       '',
+  email:      '',
   department: '',
-  subject: '',
-  message: '',
+  subject:    '',
+  message:    '',
 }
 
 export default function ContactPage() {
-  const [form, setForm] = useState<FormState>(initialForm)
+  const [form,      setForm]      = useState<FormState>(initialForm)
   const [submitted, setSubmitted] = useState(false)
-  const [errors, setErrors] = useState<Partial<FormState>>({})
+  const [loading,   setLoading]   = useState(false)
+  const [errors,    setErrors]    = useState<FormErrors>({})
 
   const validate = (): boolean => {
-    const next: Partial<FormState> = {}
-    if (!form.name.trim())       next.name       = 'Name is required'
-    if (!form.email.trim())      next.email      = 'Email is required'
+    const next: FormErrors = {}
+    if (!form.name.trim())    next.name       = 'Name is required'
+    if (!form.email.trim())   next.email      = 'Email is required'
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-                                 next.email      = 'Enter a valid email'
-    if (!form.department)        next.department = 'Please select a department'
-    if (!form.subject.trim())    next.subject    = 'Subject is required'
-    if (!form.message.trim())    next.message    = 'Message is required'
+                              next.email      = 'Enter a valid email'
+    if (!form.department)     next.department = 'Please select a department'
+    if (!form.subject.trim()) next.subject    = 'Subject is required'
+    if (!form.message.trim()) next.message    = 'Message is required'
     setErrors(next)
     return Object.keys(next).length === 0
   }
@@ -42,15 +48,33 @@ export default function ContactPage() {
   ) => {
     const { name, value } = e.target
     setForm((prev) => ({ ...prev, [name]: value }))
-    if (errors[name as keyof FormState]) {
+    if (errors[name as keyof FormErrors]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }))
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!validate()) return
-    setSubmitted(true)
+
+    setLoading(true)
+    setErrors({})
+
+    try {
+      await api.post('/api/contact', {
+        name:       form.name,
+        email:      form.email,
+        department: form.department,
+        subject:    form.subject,
+        message:    form.message,
+      })
+      setSubmitted(true)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Something went wrong'
+      setErrors((prev) => ({ ...prev, apiError: message }))
+    } finally {
+      setLoading(false)
+    }
   }
 
   const inputBase =
@@ -63,15 +87,15 @@ export default function ContactPage() {
 
   return (
     <>
-      <PageHero
-        eyebrow="Get in Touch"
-        title="Contact Us"
-        subtitle="Whether it's business, press, or just a question — we're here."
-      />
       <SEO
         url="/contact"
         title="Contact Us"
         description="Get in touch with Solar Flare Esports for business inquiries, press, or general questions."
+      />
+      <PageHero
+        eyebrow="Get in Touch"
+        title="Contact Us"
+        subtitle="Whether it's business, press, or just a question — we're here."
       />
 
       <section className="max-w-275 mx-auto px-6 md:px-12 py-16">
@@ -87,9 +111,7 @@ export default function ContactPage() {
                 <div
                   key={dept.id}
                   className="bg-sf-surface p-6 cursor-pointer group hover:bg-[#222226] transition-colors duration-200"
-                  onClick={() =>
-                    setForm((prev) => ({ ...prev, department: dept.id }))
-                  }
+                  onClick={() => setForm((prev) => ({ ...prev, department: dept.id }))}
                 >
                   <div className="flex items-start gap-4">
                     <span className="text-[28px] shrink-0">{dept.icon}</span>
@@ -100,7 +122,7 @@ export default function ContactPage() {
                       <p className="text-[12px] text-sf-muted leading-relaxed mb-3">
                         {dept.description}
                       </p>
-                      <a
+                      <a 
                         href={`mailto:${dept.email}`}
                         className="text-[11px] font-semibold tracking-[0.08em] text-sf-orange hover:underline"
                         onClick={(e) => e.stopPropagation()}
@@ -120,9 +142,9 @@ export default function ContactPage() {
               </p>
               <div className="flex gap-3">
                 {[
-                  { label: 'X', symbol: '𝕏' },
-                  { label: 'Discord', symbol: '◈' },
-                  { label: 'YouTube', symbol: '▶' },
+                  { label: 'X',         symbol: '𝕏' },
+                  { label: 'Discord',   symbol: '◈' },
+                  { label: 'YouTube',   symbol: '▶' },
                   { label: 'Instagram', symbol: '📷' },
                 ].map((s) => (
                   <button
@@ -169,6 +191,7 @@ export default function ContactPage() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
+
                 {/* Name + Email */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
@@ -250,11 +273,27 @@ export default function ContactPage() {
                   {fieldError('message')}
                 </div>
 
+                {/* API error */}
+                {errors.apiError && (
+                  <div className="bg-red-500/10 border border-red-500/20 px-4 py-3">
+                    <p className="text-[13px] text-red-400">{errors.apiError}</p>
+                  </div>
+                )}
+
+                {/* Submit button */}
                 <button
                   type="submit"
-                  className="self-start px-10 py-3.5 bg-sf-orange text-white text-[12px] font-bold tracking-[0.14em] uppercase hover:bg-orange-500 transition-colors duration-200"
+                  disabled={loading}
+                  className="self-start px-10 py-3.5 bg-sf-orange text-white text-[12px] font-bold tracking-[0.14em] uppercase hover:bg-orange-500 transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-3"
                 >
-                  Send Message →
+                  {loading ? (
+                    <>
+                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    'Send Message →'
+                  )}
                 </button>
               </form>
             )}
@@ -263,4 +302,4 @@ export default function ContactPage() {
       </section>
     </>
   )
-} 
+}

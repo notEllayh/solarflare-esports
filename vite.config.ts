@@ -6,4 +6,28 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss(),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: (id: string) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+              return 'reactVendor'
+            }
+            if (id.includes('framer-motion')) {
+              return 'motion'
+            }
+            if (id.includes('fuse.js')) {
+              return 'search'
+            }
+            if (id.includes('react-helmet-async')) {
+              return 'helmet'
+            }
+            return 'vendor'
+          }
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
+  },
 })

@@ -117,7 +117,7 @@ export const players: Player[] = [
 
   { id: 'bigjay',    alias: 'BIGJAY',    realName: 'Jubreel Ajibola',    role: 'Player',division: 'eFootball', country: '🇳🇬', nationality: 'Nigerian', age: 24, joinedYear: '2025', image: '/players/bigjay.jpeg', bio: '', stats: [], achievements: [], socials: [], signature: '' },
 
-  { id: 'kingnonex',    alias: 'KINGNONEX',    realName: 'Babundo Richard',    role: 'Player',division: 'EA FC26', country: '🇳🇬', nationality: 'Nigerian', age: 24, joinedYear: '2025', image: '/players/kingnonex.png', bio: '', stats: [], achievements: [], socials: [], signature: '' },
+  { id: 'kingnonex',    alias: 'KINGNONEX',    realName: 'Babundo Richard',    role: 'Player',division: 'EA FC 26', country: '🇳🇬', nationality: 'Nigerian', age: 24, joinedYear: '2025', image: '/players/kingnonex.png', bio: '', stats: [], achievements: [], socials: [], signature: '' },
 ] 
 
 export const news: NewsItem[] = [
@@ -553,28 +553,28 @@ export const contactDepartments: ContactDepartment[] = [
     icon: '💬',
     title: 'General Enquiries',
     description: 'Questions about Solar Flare, our teams, or anything else.',
-    email: 'hello@solarflare.gg',
+    email: 'hello@solarflareesports.com',
   },
   {
     id: 'partnerships',
     icon: '🤝',
     title: 'Partnerships & Sponsorships',
     description: 'Interested in partnering with Solar Flare? Let\'s talk.',
-    email: 'partners@solarflare.gg',
+    email: 'hello@solarflareesports.com',
   },
   {
     id: 'press',
     icon: '📰',
     title: 'Press & Media',
     description: 'Media requests, interviews, and press accreditation.',
-    email: 'press@solarflare.gg',
+    email: 'hello@solarflareesports.com',
   },
   {
     id: 'careers',
     icon: '🚀',
     title: 'Careers',
     description: 'Want to join the org? We\'d love to hear from you.',
-    email: 'careers@solarflare.gg',
+    email: 'hello@solarflareesports.com',
   },
 ]
 
@@ -883,7 +883,7 @@ export const teamDetails: TeamDetail[] = [
     ],
     recentResults: [
       { opponent: 'Gemiel',  score: '2-1', outcome: 'W', tournament: 'EFNL League S2', date: 'Apr 10, 2026' },
-      { opponent: 'Kida',        score: '2-3', outcome: 'W', tournament: 'EFNL League S2', date: 'Apr 6, 2026' },
+      { opponent: 'Kida',        score: '2-3', outcome: 'L', tournament: 'EFNL League S2', date: 'Apr 6, 2026' },
       { opponent: 'Black Boysho',  score: '2-2', outcome: 'D', tournament: 'EFNL League S2', date: 'Apr 4, 2026'  },
       { opponent: 'Omokagbon',    score: '0-2', outcome: 'L', tournament: 'EFNL League S2', date: 'Apr 2, 2026'  },
       { opponent: 'Onowu',   score: '2-1', outcome: 'W', tournament: 'EFNL League S2',  date: 'Mar 30, 2026' },
@@ -902,7 +902,7 @@ export const teamDetails: TeamDetail[] = [
     emoji: '🏆',
     description: 'Solar Flare\'s EA FC division competes in the Cade Elite League — the top tier of competitive football gaming in Nigeria. Technically elite and tactically sharp, our players make the virtual beautiful game look effortless.',
     founded: '2025',
-    roster: [],
+    roster: ['kingnonex'],
     coaches: [
       { name: 'Onabanjo Eniola',  role: 'Head Coach',       image: '/staff/emeka.jpg' },
       { name: 'TBA', role: 'Tactical Coach',  image: '/staff/finn.jpg' },
@@ -913,7 +913,7 @@ export const teamDetails: TeamDetail[] = [
     ],
     recentResults: [
       { opponent: 'Mitch',    score: '5-3', outcome: 'W', tournament: 'Cade Elite League', date: 'Apr 23, 2026' },
-      { opponent: 'Yemi',  score: '1-2', outcome: 'W', tournament: 'Cade Pro League', date: 'Mar 8, 2026' },
+      { opponent: 'Yemi',  score: '1-2', outcome: 'L', tournament: 'Cade Pro League', date: 'Mar 8, 2026' },
       { opponent: 'Son of God',     score: '3-0', outcome: 'W', tournament: 'Cade Pro League', date: 'Mar 7, 2026'  },
       { opponent: 'Blaise 99',   score: '3-0', outcome: 'W', tournament: 'Cade Pro League', date: 'Feb 28, 2026'  },
       { opponent: 'Mr Oga',    score: '7-4', outcome: 'W', tournament: 'Cade Pro League', date: 'Feb 28, 2026' },
@@ -945,10 +945,10 @@ export const mediaItems: MediaItem[] = [
   {
     id: 'm1',
     type: 'photo',
-    title: 'VORTEX lifts the FF Pro League trophy',
+    title: 'Solar Flare FFWS AFRICA TEAM ROSTER',
     division: 'Free Fire',
-    date: 'Apr 24, 2026',
-    thumbnail: '/media/ffws-trophy.jpg',
+    date: 'Apr 17, 2026',
+    thumbnail: '/media/Slf RoadToFfws.png',
     tag: 'Tournament',
     featured: true,
   },
@@ -974,10 +974,10 @@ export const mediaItems: MediaItem[] = [
   {
     id: 'm4',
     type: 'photo',
-    title: 'ECHO wins FIDE Online Arena Open',
+    title: 'Tennyson Live at Zone 4.2 Championship',
     division: 'Chess',
-    date: 'Apr 14, 2026',
-    thumbnail: '/media/echo-chess-win.jpg',
+    date: 'Apr 25, 2026',
+    thumbnail: '/media/tennyson-live.jpg',
     tag: 'Tournament',
   },
   {
@@ -992,29 +992,29 @@ export const mediaItems: MediaItem[] = [
   {
     id: 'm6',
     type: 'photo',
-    title: 'Solar Flare team photo — Spring 2026',
+    title: 'Solar Flare free fire team photo — Spring 2026',
     division: 'Free Fire',
     date: 'Apr 8, 2026',
-    thumbnail: '/media/team-photo.jpg',
-    tag: 'Team',
+    thumbnail: '/media/freefire-team.jpeg',
+    tag: 'Media Day',
   },
   {
     id: 'm7',
     type: 'video',
-    title: 'Player Focus — NOVA\'s support philosophy',
+    title: 'Free fire team q&a session - Vibes and banter with the squad',
     division: 'Free Fire',
-    date: 'Apr 5, 2026',
-    thumbnail: '/media/nova-focus.jpg',
-    tag: 'Feature',
+    date: 'Apr 4, 2026',
+    thumbnail: '/media/freefire-teamq&a.mp4',
+    tag: 'Q&A',
   },
   {
     id: 'm8',
     type: 'photo',
-    title: 'eFootball squad at league day',
+    title: 'eFootball squad at media day',
     division: 'eFootball',
-    date: 'Apr 3, 2026',
-    thumbnail: '/media/efootball-league.jpg',
-    tag: 'Match Day',
+    date: 'Apr 4, 2026',
+    thumbnail: '/media/efootball-players.jpeg',
+    tag: 'Media Day',
   },
   {
     id: 'm9',
@@ -1038,10 +1038,10 @@ export const mediaItems: MediaItem[] = [
   {
     id: 'm11',
     type: 'photo',
-    title: 'ECHO deep in thought — FIDE Open',
+    title: 'Tennyson deep in thought — Zone 4.2 Championship',
     division: 'Chess',
-    date: 'Mar 20, 2026',
-    thumbnail: '/media/echo-thinking.jpg',
+    date: 'Apr 29, 2026',
+    thumbnail: '/media/tennyson-deepthought.jpg',
     tag: 'Tournament',
   },
   {
@@ -1049,8 +1049,8 @@ export const mediaItems: MediaItem[] = [
     type: 'photo',
     title: 'Jersey reveal — Solar Flare 2026 kit',
     division: 'Free Fire',
-    date: 'Feb 16, 2026',
-    thumbnail: '/src/assets/SlfMainJersey.png',
+    date: 'Mar 3, 2026',
+    thumbnail: '/media/SlfMainJersey.png',
     tag: 'Brand',
   },
 ] 
@@ -1068,7 +1068,7 @@ export const privacySections: LegalSection[] = [
     title: 'Who We Are',
     content: [
       'Solar Flare Esports Ltd is a company registered in England and Wales. Our registered address is London, United Kingdom. When we refer to "Solar Flare", "we", "us" or "our" in this policy, we mean Solar Flare Esports Ltd.',
-      'This Privacy Policy explains how we collect, use, store and share your personal data when you use our website at solarflare.gg, purchase from our store, or engage with our services including the Flame Society membership programme.',
+      'This Privacy Policy explains how we collect, use, store and share your personal data when you use our website at hello@solarflareesports.com, purchase from our store, or engage with our services including the Flame Society membership programme.',
     ],
   },
   {
@@ -1114,7 +1114,7 @@ export const privacySections: LegalSection[] = [
       'We retain your personal data only for as long as necessary to fulfil the purposes for which it was collected, or as required by law.',
       'Account data is retained for the duration of your membership plus 2 years.',
       'Transaction records are retained for 7 years in accordance with financial regulations.',
-      'You may request deletion of your data at any time by contacting us at privacy@solarflare.gg.',
+      'You may request deletion of your data at any time by contacting us at privacy@solarflareesports.com.',
     ],
   },
   {
@@ -1122,7 +1122,7 @@ export const privacySections: LegalSection[] = [
     content: [
       'Under UK GDPR and the Data Protection Act 2018, you have the right to: access your personal data, correct inaccurate data, request erasure of your data, restrict or object to processing, and data portability.',
       'You also have the right to lodge a complaint with the Information Commissioner\'s Office (ICO) at ico.org.uk.',
-      'To exercise any of these rights, contact us at privacy@solarflare.gg. We will respond within 30 days.',
+      'To exercise any of these rights, contact us at privacy@solarflareesports.com. We will respond within 30 days.',
     ],
   },
   {
@@ -1135,7 +1135,7 @@ export const privacySections: LegalSection[] = [
   {
     title: 'Contact Us',
     content: [
-      'If you have any questions about this Privacy Policy or how we handle your data, please contact our Data Protection team at privacy@solarflare.gg or write to us at Solar Flare Esports Ltd, London, United Kingdom.',
+      'If you have any questions about this Privacy Policy or how we handle your data, please contact our Data Protection team at privacy@solarflareesports.com or write to us at Solar Flare Esports Ltd, London, United Kingdom.',
     ],
   },
 ]
@@ -1144,7 +1144,7 @@ export const termsSections: LegalSection[] = [
   {
     title: 'Acceptance of Terms',
     content: [
-      'By accessing or using the Solar Flare Esports website at solarflare.gg, you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use our website.',
+      'By accessing or using the Solar Flare Esports website at hello@solarflareesports.com, you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use our website.',
       'We reserve the right to update these terms at any time. Continued use of the website after changes constitutes acceptance of the updated terms.',
     ],
   },
@@ -1197,7 +1197,7 @@ export const termsSections: LegalSection[] = [
   {
     title: 'Contact',
     content: [
-      'If you have any questions about these Terms of Use, please contact us at legal@solarflare.gg.',
+      'If you have any questions about these Terms of Use, please contact us at legal@solarflareesports.com.',
     ],
   },
 ]
@@ -1236,7 +1236,7 @@ export const cookieSections: LegalSection[] = [
   {
     title: 'Contact',
     content: [
-      'If you have questions about our use of cookies, please contact us at privacy@solarflare.gg.',
+      'If you have questions about our use of cookies, please contact us at privacy@solarflareesports.com.',
     ],
   },
 ]
@@ -1275,7 +1275,7 @@ export const accessibilitySections: LegalSection[] = [
   {
     title: 'Feedback & Contact',
     content: [
-      'We welcome your feedback on the accessibility of our website. If you encounter any barriers or have suggestions for improvement, please contact us at accessibility@solarflare.gg.',
+      'We welcome your feedback on the accessibility of our website. If you encounter any barriers or have suggestions for improvement, please contact us at accessibility@solarflareesports.com.',
       'We aim to respond to accessibility feedback within 5 business days.',
     ],
   },

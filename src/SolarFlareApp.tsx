@@ -1,32 +1,60 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, lazy, Suspense } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import Navbar from './components/Navbar'
+import ScrollToTopOnNavigate from './components/ScrollToTopOnNavigate'
 import Footer from './components/Footer'
 import CookieBanner from './components/CookieBanner'
 import ScrollToTop from './components/ScrollToTop'
 import SplashScreen from './components/SplashScreen'
 import PageTransition from './components/PageTransition'
-import HomePage from './pages/HomePage'
-import TeamsPage from './pages/TeamsPage'
-import TeamDetailPage from './pages/TeamDetailPage'
-import RosterPage from './pages/RosterPage'
-import PlayerProfilePage from './pages/PlayerProfilePage'
-import NewsPage from './pages/NewsPage'
-import NewsArticlePage from './pages/NewsArticlePage'
-import PartnersPage from './pages/PartnersPage'
-import ShopPage from './pages/ShopPage'
-import CareersPage from './pages/CareersPage'
-import ContactPage from './pages/ContactPage'
-import FlameSocietyPage from './pages/FlameSocietyPage'
-import AboutPage from './pages/AboutPage'
-import GalleryPage from './pages/GalleryPage'
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
-import TermsPage from './pages/TermsPage'
-import CookiePolicyPage from './pages/CookiePolicyPage'
-import AccessibilityPage from './pages/AccessibilityPage'
-import MatchTrackerPage from './pages/MatchTrackerPage'
-import NotFoundPage from './pages/NotFoundPage'
+
+// Lazy loaded pages — each becomes its own chunk
+const HomePage          = lazy(() => import('./pages/HomePage'))
+const TeamsPage         = lazy(() => import('./pages/TeamsPage'))
+const TeamDetailPage    = lazy(() => import('./pages/TeamDetailPage'))
+const RosterPage        = lazy(() => import('./pages/RosterPage'))
+const PlayerProfilePage = lazy(() => import('./pages/PlayerProfilePage'))
+const NewsPage          = lazy(() => import('./pages/NewsPage'))
+const NewsArticlePage   = lazy(() => import('./pages/NewsArticlePage'))
+const PartnersPage      = lazy(() => import('./pages/PartnersPage'))
+const ShopPage          = lazy(() => import('./pages/ShopPage'))
+const CareersPage       = lazy(() => import('./pages/CareersPage'))
+const ContactPage       = lazy(() => import('./pages/ContactPage'))
+const FlameSocietyPage  = lazy(() => import('./pages/FlameSocietyPage'))
+const AboutPage         = lazy(() => import('./pages/AboutPage'))
+const GalleryPage       = lazy(() => import('./pages/GalleryPage'))
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'))
+const TermsPage         = lazy(() => import('./pages/TermsPage'))
+const CookiePolicyPage  = lazy(() => import('./pages/CookiePolicyPage'))
+const AccessibilityPage = lazy(() => import('./pages/AccessibilityPage'))
+const MatchTrackerPage  = lazy(() => import('./pages/MatchTrackerPage'))
+const NotFoundPage      = lazy(() => import('./pages/NotFoundPage'))
+
+// Page loading fallback
+function PageLoader() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-sf-darker">
+      <div className="flex flex-col items-center gap-4">
+        <div
+          className="w-10 h-10 flex items-center justify-center text-white text-xs font-black animate-pulse"
+          style={{
+            background: 'linear-gradient(135deg, #FF6A00, #FFB800)',
+            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+          }}
+        >
+          SF
+        </div>
+        <div className="w-32 h-0.5 bg-white/5 overflow-hidden">
+          <div
+            className="h-full w-full animate-pulse"
+            style={{ background: 'linear-gradient(90deg, #FF6A00, #FFB800)' }}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -81,11 +109,14 @@ export default function App() {
         }}
       >
         <Navbar />
-        <AnimatedRoutes />
+        <ScrollToTopOnNavigate />
+        <Suspense fallback={<PageLoader />}>
+          <AnimatedRoutes />
+        </Suspense>
         <CookieBanner />
         <ScrollToTop />
         <Footer />
       </div>
     </>
   )
-}
+} 

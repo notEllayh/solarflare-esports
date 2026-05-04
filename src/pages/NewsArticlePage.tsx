@@ -183,7 +183,7 @@ export default function NewsArticlePage() {
               </p>
               <div className="flex gap-2">
                 {[
-                  { label: 'X', href: `https://x.com/intent/tweet?text=${encodeURIComponent(article.headline)}&url=${encodeURIComponent(`https://solarflare.gg/news/${article.id}`)}` },
+                  { label: 'X', href: `https://x.com/intent/tweet?text=${encodeURIComponent(article.headline)}&url=${encodeURIComponent(`https://solarflareesports.com/news/${article.id}`)}` },
                   { label: 'Copy Link', href: '#' },
                 ].map((s) => (
                   <a
@@ -193,7 +193,7 @@ export default function NewsArticlePage() {
                     rel="noopener noreferrer"
                     onClick={s.label === 'Copy Link' ? (e) => {
                       e.preventDefault()
-                      navigator.clipboard.writeText(`https://solarflare.gg/news/${article.id}`)
+                      navigator.clipboard.writeText(`https://solarflareesports.com/news/${article.id}`)
                     } : undefined}
                     className="text-[11px] font-bold tracking-widest uppercase text-sf-muted border border-white/10 px-4 py-2 hover:border-sf-orange hover:text-sf-orange transition-all duration-200"
                   >

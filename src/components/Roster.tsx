@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { players, type Player } from '../data/siteData'
+import LazyImage from './LazyImage' 
 
 function PlayerCard({ player }: { player: Player }) {
-  const [imgError, setImgError] = useState(false)
+  const [imgError,] = useState(false)
 
   return (
     <Link
@@ -15,11 +16,12 @@ function PlayerCard({ player }: { player: Player }) {
         style={{ aspectRatio: '3/4' }}
       >
         {!imgError ? (
-          <img
+          <LazyImage
             src={player.image}
             alt={player.alias}
-            onError={() => setImgError(true)}
+            fallback={player.alias.charAt(0)}
             className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+            style={{ aspectRatio: '3/4' }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-sf-mid">

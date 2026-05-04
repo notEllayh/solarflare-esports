@@ -95,10 +95,10 @@ export default function LegalPage({
                 Questions about this page? Contact us at{' '}
                 
                   <a
-                    href="mailto:legal@solarflare.gg"
+                    href="mailto:legal@solarflare.com"
                     className="text-sf-orange hover:underline"
                   >
-                    legal@solarflare.gg
+                    legal@solarflare.com
                   </a>
               </p>
             </div>
