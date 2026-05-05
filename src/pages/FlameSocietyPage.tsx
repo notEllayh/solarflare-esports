@@ -1,14 +1,43 @@
-//import SlfLogo from '../assets/Logos/RedLogo.png';
-import SEO from '../components/SEO'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { membershipTiers, fanPerks, type MembershipTier } from '../data/siteData'
+import { useAuth } from '../context/useAuth'
+import { api } from '../lib/api'
+import SEO from '../components/SEO'
 
+// ── Tier Card ─────────────────────────────────────────────
 function TierCard({ tier, billing }: { tier: MembershipTier; billing: 'month' | 'year' }) {
-   const rawPrice = billing === 'year' ? tier.price * 12 * 0.8 : tier.price
-   const formattedPrice = new Intl.NumberFormat('en-NG', {
+  const [loading, setLoading] = useState(false)
+  const { user, session }     = useAuth()
+  const navigate              = useNavigate()
+
+  const rawPrice       = billing === 'year' ? tier.price * 12 * 0.8 : tier.price
+  const formattedPrice = new Intl.NumberFormat('en-NG', {
     maximumFractionDigits: 0,
   }).format(rawPrice)
   const period = billing === 'year' ? 'year' : 'month'
+
+  const handleJoin = async () => {
+    if (!user || !session) {
+      navigate('/login')
+      return
+    }
+
+    setLoading(true)
+    try {
+      const res = await api.post<{ authorization_url: string }>(
+        '/api/membership/initialize',
+        { tier: tier.id },
+        { Authorization: `Bearer ${session.access_token}` }
+      )
+      window.location.href = res.authorization_url
+    } catch (err) {
+      console.error('Payment error:', err)
+      alert('Failed to initialize payment. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div
@@ -18,7 +47,7 @@ function TierCard({ tier, billing }: { tier: MembershipTier; billing: 'month' | 
           : 'bg-sf-surface hover:bg-[#222226]'
       }`}
     >
-      {/* Featured label */}
+      {/* Featured top bar */}
       {tier.featured && (
         <div
           className="absolute -top-px left-0 right-0 h-0.75"
@@ -40,18 +69,29 @@ function TierCard({ tier, billing }: { tier: MembershipTier; billing: 'month' | 
       </div>
 
       {/* Price */}
-      <div className="mb-2">
+      <div className="mb-2 flex items-start gap-1">
         <span
-          className="font-condensed font-black text-[48px] leading-none"
+          className="font-condensed font-black text-[22px] leading-tight mt-2"
           style={{
             background: 'linear-gradient(90deg, #FF6A00, #FFB800)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
           }}
         >
-          ₦{formattedPrice}
+          ₦
         </span>
-        <span className="text-sf-muted text-[13px] ml-1">/ {period}</span>
+        <span
+          className="font-condensed font-black text-[48px] leading-none"
+          style={{
+            background: 'linear-gradient(90deg, #FF6A00, #FFB800)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}>
+          {formattedPrice}
+        </span>
+        <span className="text-sf-muted text-[13px] self-end mb-1.5 ml-0.5">
+          / {period}
+        </span>
       </div>
 
       {billing === 'year' && (
@@ -64,7 +104,6 @@ function TierCard({ tier, billing }: { tier: MembershipTier; billing: 'month' | 
         {tier.description}
       </p>
 
-      {/* Divider */}
       <div className="w-full h-px bg-white/8 mb-6" />
 
       {/* Perks */}
@@ -82,19 +121,32 @@ function TierCard({ tier, billing }: { tier: MembershipTier; billing: 'month' | 
         ))}
       </ul>
 
+      {/* CTA button */}
       <button
-        className={`w-full py-3.5 text-[12px] font-bold tracking-[0.14em] uppercase transition-colors duration-200 ${
+        onClick={handleJoin}
+        disabled={loading}
+        className={`w-full py-3.5 text-[12px] font-bold tracking-[0.14em] uppercase transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 ${
           tier.featured
             ? 'bg-sf-orange text-white hover:bg-orange-500'
             : 'border border-white/20 text-sf-text hover:border-white/50'
         }`}
       >
-        Join {tier.name} →
+        {loading ? (
+          <>
+            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            Processing...
+          </>
+        ) : user ? (
+          `Join ${tier.name} →`
+        ) : (
+          'Sign In to Join →'
+        )}
       </button>
     </div>
   )
 }
 
+// ── Page ──────────────────────────────────────────────────
 export default function FlameSocietyPage() {
   const [billing, setBilling] = useState<'month' | 'year'>('month')
 
@@ -102,10 +154,11 @@ export default function FlameSocietyPage() {
     <div className="bg-sf-darker">
       <SEO
         url="/flame-society"
-        title="Flame Society"
-        description="Join the official Solar Flare fan membership. Exclusive access, member perks, and a community of thousands who burn as bright as we do."
+        title="Flame Society — Fan Membership"
+        description="Join the Flame Society — the official Solar Flare Esports fan membership. Exclusive content, perks, and community access."
       />
-      {/* Hero — custom, not PageHero */}
+
+      {/* ── Hero ── */}
       <div className="relative min-h-[55vh] flex flex-col items-center justify-center text-center overflow-hidden pt-17 px-6">
         <div
           className="absolute inset-0 pointer-events-none"
@@ -129,7 +182,6 @@ export default function FlameSocietyPage() {
         />
 
         <div className="relative z-10 max-w-3xl mx-auto">
-          {/* Flame icon */}
           <div className="flex justify-center mb-6">
             <div className="text-[56px]">🔥</div>
           </div>
@@ -153,7 +205,8 @@ export default function FlameSocietyPage() {
             </span>
           </h1>
           <p className="text-sf-muted text-[16px] font-light max-w-xl mx-auto leading-relaxed">
-            The official Solar Flare fan membership. Exclusive access, member perks, and a community of thousands who burn as bright as we do.
+            The official Solar Flare fan membership. Exclusive access, member perks,
+            and a community of thousands who burn as bright as we do.
           </p>
         </div>
 
@@ -163,7 +216,7 @@ export default function FlameSocietyPage() {
         />
       </div>
 
-      {/* Perks strip */}
+      {/* ── Perks strip ── */}
       <section className="max-w-275 mx-auto px-6 md:px-12 py-16">
         <p className="text-[11px] font-bold tracking-[0.15em] uppercase text-sf-orange mb-3">
           Member Benefits
@@ -176,7 +229,10 @@ export default function FlameSocietyPage() {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-0.5">
           {fanPerks.map((perk) => (
-            <div key={perk.title} className="bg-sf-surface p-7 group hover:bg-[#222226] transition-colors duration-200">
+            <div
+              key={perk.title}
+              className="bg-sf-surface p-7 group hover:bg-[#222226] transition-colors duration-200"
+            >
               <div className="text-[32px] mb-4">{perk.icon}</div>
               <h3 className="font-condensed font-bold text-[18px] uppercase text-sf-text mb-2">
                 {perk.title}
@@ -189,7 +245,7 @@ export default function FlameSocietyPage() {
         </div>
       </section>
 
-      {/* Membership tiers */}
+      {/* ── Membership tiers ── */}
       <section className="max-w-275 mx-auto px-6 md:px-12 pb-20">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
@@ -244,14 +300,14 @@ export default function FlameSocietyPage() {
             '✓ Cancel anytime',
             '✓ No hidden fees',
             '✓ Instant access on signup',
-            '✓ Secure payment',
+            '✓ Secure payment via Paystack',
           ].map((item) => (
             <span key={item}>{item}</span>
           ))}
         </div>
       </section>
 
-      {/* Community CTA banner */}
+      {/* ── Community CTA ── */}
       <div className="border-t border-sf-border">
         <div className="max-w-275 mx-auto px-6 md:px-12 py-16 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
           <div>
@@ -262,16 +318,20 @@ export default function FlameSocietyPage() {
               Already a Member?
             </h3>
             <p className="text-sf-muted text-[14px] max-w-md leading-relaxed">
-              Head to the Flame Society Discord and connect with the community. Your role and perks are waiting.
+              Head to the Flame Society Discord and connect with the community.
+              Your role and perks are waiting.
             </p>
           </div>
-          <button
+          <a
+            href="https://discord.com"
+            target="_blank"
+            rel="noopener noreferrer"
             className="shrink-0 px-10 py-4 text-[12px] font-bold tracking-[0.14em] uppercase border border-white/20 text-sf-text hover:border-sf-orange hover:text-sf-orange transition-all duration-200 whitespace-nowrap"
           >
             Open Discord →
-          </button>
+          </a>
         </div>
       </div>
     </div>
   )
-}
+} 

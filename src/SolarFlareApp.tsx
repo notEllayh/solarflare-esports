@@ -2,6 +2,11 @@ import { useState, useCallback, lazy, Suspense } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import Navbar from './components/Navbar'
+import LoginPage          from './pages/LoginPage'
+import SignupPage         from './pages/SignupPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import AccountPage from './pages/AccountPage'
+import MembershipVerifyPage from './pages/MembershipVerifyPage'
 import ScrollToTopOnNavigate from './components/ScrollToTopOnNavigate'
 import Footer from './components/Footer'
 import CookieBanner from './components/CookieBanner'
@@ -63,6 +68,9 @@ function AnimatedRoutes() {
     <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname}>
         <Route path="/"              element={<PageTransition><HomePage /></PageTransition>} />
+        <Route path="/login"           element={<PageTransition><LoginPage /></PageTransition>} />
+        <Route path="/signup"          element={<PageTransition><SignupPage /></PageTransition>} />
+        <Route path="/forgot-password" element={<PageTransition><ForgotPasswordPage /></PageTransition>} />
         <Route path="/teams"         element={<PageTransition><TeamsPage /></PageTransition>} />
         <Route path="/teams/:id"     element={<PageTransition><TeamDetailPage /></PageTransition>} />
         <Route path="/roster"        element={<PageTransition><RosterPage /></PageTransition>} />
@@ -73,7 +81,9 @@ function AnimatedRoutes() {
         <Route path="/shop"          element={<PageTransition><ShopPage /></PageTransition>} />
         <Route path="/careers"       element={<PageTransition><CareersPage /></PageTransition>} />
         <Route path="/contact"       element={<PageTransition><ContactPage /></PageTransition>} />
+        <Route path="/account" element={<PageTransition><AccountPage /></PageTransition>} /> 
         <Route path="/flame-society" element={<PageTransition><FlameSocietyPage /></PageTransition>} />
+        <Route path="/membership/verify" element={<PageTransition><MembershipVerifyPage /></PageTransition>} />
         <Route path="/about"         element={<PageTransition><AboutPage /></PageTransition>} />
         <Route path="/gallery"       element={<PageTransition><GalleryPage /></PageTransition>} />
         <Route path="/privacy"       element={<PageTransition><PrivacyPolicyPage /></PageTransition>} />

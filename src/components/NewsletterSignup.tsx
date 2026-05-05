@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { api } from '../lib/api' 
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
@@ -30,17 +31,24 @@ export default function NewsletterSignup() {
     return ''
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const err = validate()
-    if (err) { setError(err); return }
-    setError('')
-    setStatus('loading')
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  const err = validate()
+  if (err) { setError(err); return }
+  setError('')
+  setStatus('loading')
 
-    // Simulate API call — replace with your actual email provider (Resend, Mailchimp, etc.)
-    await new Promise((res) => setTimeout(res, 1200))
+  try {
+    await api.post('/api/newsletter/subscribe', {
+      email,
+      interests: selected,
+    })
     setStatus('success')
+  } catch (err) {
+    setError(err instanceof Error ? err.message : 'Something went wrong')
+    setStatus('idle')
   }
+} 
 
   return (
     <div className="relative overflow-hidden border-t border-sf-border">

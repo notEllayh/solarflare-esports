@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async'
+import { AuthProvider } from './context/AuthContext'
 import SolarFlareApp from './SolarFlareApp.tsx'
 import './index.css' 
 
@@ -15,8 +16,10 @@ ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <HelmetProvider>
       <BrowserRouter>
-        <SolarFlareApp />
+        <AuthProvider>
+          <SolarFlareApp />
+        </AuthProvider>
       </BrowserRouter>
     </HelmetProvider>
   </React.StrictMode>
-);
+); 

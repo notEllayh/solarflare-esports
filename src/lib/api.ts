@@ -1,7 +1,5 @@
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
-console.log('API URL:', BASE_URL)
-
 async function request<T>(
   endpoint: string,
   options: RequestInit = {}
@@ -37,4 +35,4 @@ export const api = {
       method: 'GET',
       headers,
     }),
-}
+} 
