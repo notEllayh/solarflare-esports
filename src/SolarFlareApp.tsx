@@ -76,7 +76,7 @@ function AnimatedRoutes() {
         <Route path="/roster"        element={<PageTransition><RosterPage /></PageTransition>} />
         <Route path="/roster/:id"    element={<PageTransition><PlayerProfilePage /></PageTransition>} />
         <Route path="/news"          element={<PageTransition><NewsPage /></PageTransition>} />
-        <Route path="/news/:id"      element={<PageTransition><NewsArticlePage /></PageTransition>} />
+        <Route path="/news/:id" element={<PageTransition><NewsArticlePage /></PageTransition>} /> 
         <Route path="/partners"      element={<PageTransition><PartnersPage /></PageTransition>} />
         <Route path="/shop"          element={<PageTransition><ShopPage /></PageTransition>} />
         <Route path="/careers"       element={<PageTransition><CareersPage /></PageTransition>} />

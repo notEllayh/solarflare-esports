@@ -44,7 +44,7 @@ export default function News() {
   if (articles.length === 0) return null
 
   return (
-    <section className="max-w-275 mx-auto px-6 md:px-12 py-16">
+    <section id="latest-news" className="max-w-275 mx-auto px-6 md:px-12 py-16">
       <div className="flex items-center justify-between mb-10">
         <div>
           <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-sf-orange mb-3">
