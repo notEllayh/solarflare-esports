@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/useAuth'
 import { api } from '../lib/api'
@@ -107,6 +107,20 @@ function Countdown({ targetDate }: { targetDate: string }) {
   )
 }
 
+// ── Toast ─────────────────────────────────────────────────
+function Toast({ message, onHide }: { message: string; onHide: () => void }) {
+  useEffect(() => {
+    const t = setTimeout(onHide, 3000)
+    return () => clearTimeout(t)
+  }, [onHide])
+
+  return (
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-green-600 text-white px-6 py-3 text-[13px] font-bold tracking-[0.08em] uppercase border border-green-500 shadow-xl whitespace-nowrap">
+      ✓ {message}
+    </div>
+  )
+}
+
 // ── Header ───────────────────────────────────────────────
 function DashboardHeader({ onSignOut }: { onSignOut: () => void }) {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -176,24 +190,11 @@ function DashboardHeader({ onSignOut }: { onSignOut: () => void }) {
   )
 }
 
-// ── Toast notification ───────────────────────────────────
-function Toast({ message, onHide }: { message: string; onHide: () => void }) {
-  useEffect(() => {
-    const t = setTimeout(onHide, 3000)
-    return () => clearTimeout(t)
-  }, [onHide])
-
-  return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-green-600 text-white px-6 py-3 text-[13px] font-bold tracking-[0.08em] uppercase border border-green-500 shadow-xl">
-      ✓ {message}
-    </div>
-  )
-}
-
 // ── Main Page ────────────────────────────────────────────
 export default function FlameSocietyDashboard() {
   const { user, session, signOut, loading } = useAuth()
-  const navigate = useNavigate()
+  const navigate  = useNavigate()
+  const initDone  = useRef(false) // ← prevents double fetch
 
   const [membership,     setMembership]     = useState<Membership | null>(null)
   const [pointsData,     setPointsData]     = useState<PointsData>({ points: 0, rank: null, log: [], leaderboard: [] })
@@ -206,90 +207,93 @@ export default function FlameSocietyDashboard() {
     if (!loading && !user) navigate('/login')
   }, [user, loading, navigate])
 
-  // ── Fetch points from API ────────────────────────────
-  const fetchPoints = useCallback(async () => {
-    if (!session?.access_token) return
-    try {
-      const res = await api.get<{ success: boolean } & PointsData>(
-        '/api/points',
-        { Authorization: `Bearer ${session.access_token}` }
-      )
-      setPointsData({
-        points:      res.points      ?? 0,
-        rank:        res.rank        ?? null,
-        log:         res.log         ?? [],
-        leaderboard: res.leaderboard ?? [],
-      })
-    } catch {
-      console.error('Failed to fetch points')
+  // ── Load points from server ──────────────────────────
+  const loadPoints = useCallback(async (token: string) => {
+    const res = await api.get<{ success: boolean } & PointsData>(
+      '/api/points',
+      { Authorization: `Bearer ${token}` }
+    )
+    setPointsData({
+      points:      res.points      ?? 0,
+      rank:        res.rank        ?? null,
+      log:         res.log         ?? [],
+      leaderboard: res.leaderboard ?? [],
+    })
+  }, [])
+
+  // ── Initial load — runs ONCE only ────────────────────
+  useEffect(() => {
+    if (!session?.access_token || initDone.current) return
+    initDone.current = true
+
+    const token = session.access_token
+
+    const init = async () => {
+      try {
+        const memberRes = await api.get<{ membership: Membership | null }>(
+          '/api/membership/status',
+          { Authorization: `Bearer ${token}` }
+        )
+        if (!memberRes.membership) { navigate('/flame-society'); return }
+        setMembership(memberRes.membership)
+
+        // Award join points once — ignore if already awarded
+        await fetch(
+          `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/points/award`,
+          {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+            body:    JSON.stringify({ action: 'joined_flame_society' }),
+          }
+        ).catch(() => {})
+
+        await loadPoints(token)
+      } catch {
+        navigate('/flame-society')
+      } finally {
+        setLoadingPoints(false)
+      }
     }
-  }, [session])
 
-  // ── Fetch all data on load ───────────────────────────
-  const fetchData = useCallback(async () => {
-    if (!session?.access_token) return
-    try {
-      const memberRes = await api.get<{ membership: Membership | null }>(
-        '/api/membership/status',
-        { Authorization: `Bearer ${session.access_token}` }
-      )
-      setMembership(memberRes.membership)
-      if (!memberRes.membership) { navigate('/flame-society'); return }
-
-      // Award join points silently
-      api.post(
-        '/api/points/award',
-        { action: 'joined_flame_society' },
-        { Authorization: `Bearer ${session.access_token}` }
-      ).catch(() => {})
-
-      await fetchPoints()
-    } catch {
-      navigate('/flame-society')
-    } finally {
-      setLoadingPoints(false)
-    }
-  }, [session, navigate, fetchPoints])
-
-  useEffect(() => { fetchData() }, [fetchData])
+    init()
+  }, [session, navigate, loadPoints])
 
   // ── Watch content ────────────────────────────────────
-  const handleWatchContent = async (contentId: number) => {
-    if (!session?.access_token) return
-    if (watchedContent.has(contentId)) return
+const handleWatchContent = async (contentId: number) => {
+  if (!session?.access_token) return
+  if (watchedContent.has(contentId)) return
 
-    // Mark as watched immediately for instant UI feedback
-    setWatchedContent((prev) => new Set([...prev, contentId]))
+  const token = session.access_token
 
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/points/award`,
-        {
-          method:  'POST',
-          headers: {
-            'Content-Type':  'application/json',
-            'Authorization': `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({
-            action: 'watched_content',
-            meta:   { contentId },
-          }),
-        }
-      )
+  // Instant UI feedback
+  setWatchedContent((prev) => new Set([...prev, contentId]))
 
-      const data = await response.json()
-
-      if (data.success) {
-        // Show toast
-        setToast('+50 XP earned for watching!')
-        // Refresh points from server
-        await fetchPoints()
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/points/award`,
+      {
+        method:  'POST',
+        headers: {
+          'Content-Type':  'application/json',
+          Authorization:   `Bearer ${token}`,
+        },
+        body: JSON.stringify({ action: 'watched_content', meta: { contentId } }),
       }
-      // If not success (already watched) — UI already marked as watched, no toast
-    } catch {
-      console.error('Failed to award watch points')
+    )
+    const data = await response.json()
+
+    if (data.success) {
+      setToast('+50 XP earned for watching!')
     }
-  }
+
+    // Always refresh points regardless of success or failure
+    await new Promise((r) => setTimeout(r, 800))
+    await loadPoints(token)
+
+  } catch {
+    console.error('Failed to award watch points')
+  } 
+}
 
   const handleSignOut = async () => {
     await signOut()
@@ -498,8 +502,8 @@ export default function FlameSocietyDashboard() {
                       return (
                         <div key={entry.user_id}
                           className={`flex items-center gap-4 px-4 py-3 border ${
-                            isMe ? 'border-sf-orange bg-[#FF6A00]/10' :
-                            rank === 1 ? 'border-sf-orange bg-[#FF6A00]/5' :
+                            isMe            ? 'border-sf-orange bg-[#FF6A00]/10' :
+                            rank === 1      ? 'border-sf-orange bg-[#FF6A00]/5'  :
                             'border-[#2a2a2e] bg-[#242428]'
                           }`}
                         >
@@ -521,21 +525,21 @@ export default function FlameSocietyDashboard() {
                     })
                   ) : (
                     [
-                      { rank: 1, name: '@blaze_official', points: 3200 },
-                      { rank: 2, name: '@sf_legend',      points: 2800 },
-                      { rank: 3, name: '@flare_nation',   points: 2500 },
+                      { rank: 1, label: '@blaze_official', points: 3200 },
+                      { rank: 2, label: '@sf_legend',      points: 2800 },
+                      { rank: 3, label: '@flare_nation',   points: 2500 },
                     ].map((entry) => (
                       <div key={entry.rank} className={`flex items-center gap-4 px-4 py-3 border ${entry.rank === 1 ? 'border-sf-orange bg-[#FF6A00]/5' : 'border-[#2a2a2e] bg-[#242428]'}`}>
                         <span className={`font-condensed font-black text-[20px] w-8 text-center ${entry.rank === 1 ? 'text-sf-orange' : entry.rank === 2 ? 'text-[#aaaaaa]' : 'text-[#cd7f32]'}`}>
                           {entry.rank === 1 ? '👑' : `#${entry.rank}`}
                         </span>
-                        <span className="flex-1 text-[13px] font-bold text-white">{entry.name}</span>
+                        <span className="flex-1 text-[13px] font-bold text-white">{entry.label}</span>
                         <span className="text-[12px] font-black text-sf-orange">{entry.points.toLocaleString()} pts</span>
                       </div>
                     ))
                   )}
 
-                  {!loadingPoints && userPoints > 0 && (
+                  {userPoints > 0 && (
                     <div className="flex items-center gap-4 px-4 py-3 border-2 border-sf-orange bg-[#FF6A00]/10 mt-2">
                       <span className="font-condensed font-black text-[20px] w-8 text-center text-sf-orange">
                         {userRank > 0 ? `#${userRank}` : '—'}
@@ -611,7 +615,7 @@ export default function FlameSocietyDashboard() {
                     ) : (
                       <div className="py-4 text-center">
                         <p className="text-[13px] text-[#aaaaaa]">No activity yet</p>
-                        <p className="text-[11px] text-[#aaaaaa] mt-1">Watch content or engage to earn Flare Points!</p>
+                        <p className="text-[11px] text-[#aaaaaa] mt-1">Watch content to earn your first Flare Points!</p>
                       </div>
                     )}
                   </div>
