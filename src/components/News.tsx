@@ -1,72 +1,105 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { news, type NewsItem } from '../data/siteData'
+import { api } from '../lib/api'
 
-function NewsCard({ item }: { item: NewsItem }) {
-  return (
-    <Link
-      to={`/news/${item.id}`}
-      className={`relative bg-sf-mid cursor-pointer hover:bg-[#1a1a1e] transition-colors duration-200 group block ${
-        item.featured ? 'p-10' : 'p-8'
-      }`}
-    >
-      <span className="inline-block text-[10px] font-bold tracking-widest uppercase bg-orange-500/15 text-sf-orange px-2.5 py-1 mb-4">
-        {item.tag}
-      </span>
-      <p className="text-[10px] font-semibold tracking-[0.12em] uppercase text-sf-muted mb-3">
-        {item.date}
-      </p>
-      <h3
-        className={`font-condensed font-bold uppercase leading-[1.05] mb-3 text-sf-text ${
-          item.featured ? 'text-[28px] md:text-[30px]' : 'text-[22px]'
-        }`}
-      >
-        {item.headline}
-      </h3>
-      <p className="text-[13px] text-sf-muted leading-relaxed pr-10 mb-4">
-        {item.excerpt}
-      </p>
-      <div className="flex items-center gap-3 text-[11px] text-sf-muted/60">
-        <span>{item.author}</span>
-        <span className="text-white/20">·</span>
-        <span>{item.readTime}</span>
-      </div>
-      <div className="absolute bottom-6 right-6 w-9 h-9 border border-white/10 flex items-center justify-center text-sf-muted text-base transition-all duration-200 group-hover:bg-sf-orange group-hover:border-sf-orange group-hover:text-white">
-        →
-      </div>
-    </Link>
-  )
+interface NewsArticle {
+  id:        string
+  tag:       string
+  date:      string
+  headline:  string
+  excerpt:   string
+  author:    string
+  read_time: string
+  division:  string
+  featured:  boolean
 }
 
 export default function News() {
-  const featured = news.find((n) => n.featured)!
-  const rest = news.filter((n) => !n.featured)
+  const [articles, setArticles] = useState<NewsArticle[]>([])
+  const [loading,  setLoading]  = useState(true)
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const res = await api.get<{ data: NewsArticle[] }>('/api/news')
+        setArticles((res.data ?? []).slice(0, 3))
+      } catch {
+        console.error('Failed to fetch news')
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchNews()
+  }, [])
+
+  if (loading) return (
+    <section className="max-w-275 mx-auto px-6 md:px-12 py-16">
+      <div className="flex items-center gap-3 text-sf-muted">
+        <span className="w-5 h-5 border-2 border-sf-muted/30 border-t-sf-orange rounded-full animate-spin block" />
+        Loading news...
+      </div>
+    </section>
+  )
+
+  if (articles.length === 0) return null
 
   return (
-    <div id="news" className="bg-sf-surface border-y border-sf-border">
-      <div className="max-w-275 mx-auto px-6 md:px-12 py-24">
-        <div
-          className="w-12 h-0.5 mb-6"
-          style={{ background: 'linear-gradient(90deg, #FF6A00, #FFB800)' }}
-        />
-        <p className="text-[11px] font-bold tracking-[0.15em] uppercase text-sf-orange mb-3">
-          Latest News
-        </p>
-        <h2
-          className="font-condensed font-black uppercase leading-[0.95]"
-          style={{ fontSize: 'clamp(36px, 5vw, 60px)' }}
-        >
-          Stay in the<br />Fire
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1fr] gap-0.5 mt-14">
-          <NewsCard item={featured} />
-          <div className="grid grid-cols-1 gap-0.5">
-            {rest.map((item) => (
-              <NewsCard key={item.id} item={item} />
-            ))}
-          </div>
+    <section className="max-w-275 mx-auto px-6 md:px-12 py-16">
+      <div className="flex items-center justify-between mb-10">
+        <div>
+          <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-sf-orange mb-3">
+            Latest Updates
+          </p>
+          <h2
+            className="font-condensed font-black uppercase leading-none text-sf-text"
+            style={{ fontSize: 'clamp(36px, 6vw, 64px)' }}
+          >
+            News
+          </h2>
         </div>
+        <Link
+          to="/news"
+          className="text-[11px] font-bold tracking-[0.14em] uppercase text-sf-muted hover:text-sf-text transition-colors duration-200 hidden md:block"
+        >
+          All News →
+        </Link>
       </div>
-    </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-0.5">
+        {articles.map((article) => (
+          <Link
+            key={article.id}
+            to={`/news/${article.id}`}
+            className="block bg-sf-surface p-6 group hover:bg-[#222226] transition-colors duration-200"
+          >
+            {article.tag && (
+              <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-sf-orange block mb-3">
+                {article.tag}
+              </span>
+            )}
+            <h3 className="font-condensed font-black text-[22px] uppercase leading-tight text-sf-text mb-3 group-hover:text-sf-orange transition-colors duration-200">
+              {article.headline}
+            </h3>
+            <p className="text-sf-muted text-[13px] leading-relaxed mb-4 line-clamp-3">
+              {article.excerpt}
+            </p>
+            <div className="flex items-center gap-3 text-[11px] text-sf-muted">
+              <span>{article.author}</span>
+              <span>·</span>
+              <span>{article.read_time}</span>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      <div className="mt-6 md:hidden">
+        <Link
+          to="/news"
+          className="text-[11px] font-bold tracking-[0.14em] uppercase text-sf-muted hover:text-sf-text transition-colors"
+        >
+          All News →
+        </Link>
+      </div>
+    </section>
   )
 } 
