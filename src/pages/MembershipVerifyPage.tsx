@@ -113,7 +113,7 @@ export default function MembershipVerifyPage() {
               </p>
               <div className="flex gap-3 justify-center">
                 <button
-                  onClick={() => navigate('/flame-society')}
+                  onClick={() => navigate('/flame-society/dashboard')} 
                   className="px-8 py-3.5 bg-sf-orange text-white text-[12px] font-bold tracking-[0.14em] uppercase hover:bg-orange-500 transition-colors duration-200"
                 >
                   Try Again

@@ -7,6 +7,7 @@ import SignupPage         from './pages/SignupPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import AccountPage from './pages/AccountPage'
 import MembershipVerifyPage from './pages/MembershipVerifyPage'
+import FlameSocietyDashboard from './pages/FlameSocietyDashboard' 
 import ScrollToTopOnNavigate from './components/ScrollToTopOnNavigate'
 import Footer from './components/Footer'
 import CookieBanner from './components/CookieBanner'
@@ -84,6 +85,7 @@ function AnimatedRoutes() {
         <Route path="/account" element={<PageTransition><AccountPage /></PageTransition>} /> 
         <Route path="/flame-society" element={<PageTransition><FlameSocietyPage /></PageTransition>} />
         <Route path="/membership/verify" element={<PageTransition><MembershipVerifyPage /></PageTransition>} />
+        <Route path="/flame-society/dashboard" element={<PageTransition><FlameSocietyDashboard /></PageTransition>} />
         <Route path="/about"         element={<PageTransition><AboutPage /></PageTransition>} />
         <Route path="/gallery"       element={<PageTransition><GalleryPage /></PageTransition>} />
         <Route path="/privacy"       element={<PageTransition><PrivacyPolicyPage /></PageTransition>} />

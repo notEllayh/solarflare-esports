@@ -476,6 +476,30 @@ export default function AccountPage() {
                       </div>
                     ))}
                   </div>
+
+                  {/* Referral link */}
+<div className="bg-sf-surface p-8 mt-4">
+  <p className="text-[11px] font-bold tracking-[0.15em] uppercase text-sf-orange mb-4">
+    Refer a Friend
+  </p>
+  <p className="text-[13px] text-sf-muted mb-4">
+    Share your referral link. You earn <span className="text-sf-orange font-bold">+300 XP</span> when a friend joins Flame Society using your link.
+  </p>
+  <div className="flex items-center gap-2">
+    <div className="flex-1 bg-sf-mid border border-sf-border px-4 py-3 text-[12px] text-sf-text font-mono truncate">
+      {`${window.location.origin}/flame-society?ref=${user.id}`}
+    </div>
+    <button
+      onClick={async () => {
+        await navigator.clipboard.writeText(`${window.location.origin}/flame-society?ref=${user.id}`)
+        alert('Referral link copied!')
+      }}
+      className="px-4 py-3 bg-sf-orange text-white text-[11px] font-bold tracking-widest uppercase hover:bg-orange-500 transition-colors shrink-0"
+    >
+      Copy
+    </button>
+  </div>
+</div>
                 </div>
 
                 <div className="bg-sf-surface p-8">

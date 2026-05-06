@@ -32,14 +32,29 @@ function CartDrawer({
 }) {
   const total = cart.reduce((sum, item) => sum + item.product.price * item.qty, 0)
 
-  const handleCheckout = () => {
-    if (cart.length === 0) return
-    const lines = cart
-      .map((item) => `• ${item.product.name} (${item.size}) x${item.qty} — £${(item.product.price * item.qty).toFixed(2)}`)
-      .join('\n')
-    const message = `Hi! I'd like to order from Solar Flare Esports:\n\n${lines}\n\nTotal: £${total.toFixed(2)}`
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank')
-  }
+  const handleCheckout = async () => {
+  if (cart.length === 0) return
+  const lines = cart
+    .map((item) => `• ${item.product.name} (${item.size}) x${item.qty} — £${(item.product.price * item.qty).toFixed(2)}`)
+    .join('\n')
+  const message = `Hi! I'd like to order from Solar Flare Esports:\n\n${lines}\n\nTotal: £${total.toFixed(2)}`
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank')
+
+  // Award merch points — get token from localStorage
+  try {
+    const stored = Object.entries(localStorage).find(([k]) => k.includes('auth-token'))
+    if (stored) {
+      const token = JSON.parse(stored[1]).access_token
+      if (token) {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/points/award`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ action: 'bought_merch' }),
+        })
+      }
+    }
+  } catch { /* ignore */ }
+}
 
   return (
     <div className="fixed inset-0 z-50 flex">

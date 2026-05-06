@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
 import { membershipTiers, fanPerks, type MembershipTier } from '../data/siteData'
 import { useAuth } from '../context/useAuth'
 import { api } from '../lib/api'
@@ -12,17 +12,11 @@ function TierCard({ tier, billing }: { tier: MembershipTier; billing: 'month' | 
   const navigate              = useNavigate()
 
   const rawPrice       = billing === 'year' ? tier.price * 12 * 0.8 : tier.price
-  const formattedPrice = new Intl.NumberFormat('en-NG', {
-    maximumFractionDigits: 0,
-  }).format(rawPrice)
-  const period = billing === 'year' ? 'year' : 'month'
+  const formattedPrice = new Intl.NumberFormat('en-NG', { maximumFractionDigits: 0 }).format(rawPrice)
+  const period         = billing === 'year' ? 'year' : 'month'
 
   const handleJoin = async () => {
-    if (!user || !session) {
-      navigate('/login')
-      return
-    }
-
+    if (!user || !session) { navigate('/login'); return }
     setLoading(true)
     try {
       const res = await api.post<{ authorization_url: string }>(
@@ -31,8 +25,7 @@ function TierCard({ tier, billing }: { tier: MembershipTier; billing: 'month' | 
         { Authorization: `Bearer ${session.access_token}` }
       )
       window.location.href = res.authorization_url
-    } catch (err) {
-      console.error('Payment error:', err)
+    } catch {
       alert('Failed to initialize payment. Please try again.')
     } finally {
       setLoading(false)
@@ -42,12 +35,9 @@ function TierCard({ tier, billing }: { tier: MembershipTier; billing: 'month' | 
   return (
     <div
       className={`relative flex flex-col p-8 transition-all duration-200 ${
-        tier.featured
-          ? 'bg-sf-surface ring-2 ring-sf-orange'
-          : 'bg-sf-surface hover:bg-[#222226]'
+        tier.featured ? 'bg-sf-surface ring-2 ring-sf-orange' : 'bg-sf-surface hover:bg-[#222226]'
       }`}
     >
-      {/* Featured top bar */}
       {tier.featured && (
         <div
           className="absolute -top-px left-0 right-0 h-0.75"
@@ -60,7 +50,6 @@ function TierCard({ tier, billing }: { tier: MembershipTier; billing: 'month' | 
         </div>
       )}
 
-      {/* Badge + name */}
       <div className="flex items-center gap-3 mb-4">
         <span className="text-[32px]">{tier.badge}</span>
         <h3 className="font-condensed font-black text-[28px] uppercase tracking-wide text-sf-text">
@@ -68,7 +57,6 @@ function TierCard({ tier, billing }: { tier: MembershipTier; billing: 'month' | 
         </h3>
       </div>
 
-      {/* Price */}
       <div className="mb-2 flex items-start gap-1">
         <span
           className="font-condensed font-black text-[22px] leading-tight mt-2"
@@ -86,12 +74,11 @@ function TierCard({ tier, billing }: { tier: MembershipTier; billing: 'month' | 
             background: 'linear-gradient(90deg, #FF6A00, #FFB800)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
-          }}>
+          }}
+        >
           {formattedPrice}
         </span>
-        <span className="text-sf-muted text-[13px] self-end mb-1.5 ml-0.5">
-          / {period}
-        </span>
+        <span className="text-sf-muted text-[13px] self-end mb-1.5 ml-0.5">/ {period}</span>
       </div>
 
       {billing === 'year' && (
@@ -106,7 +93,6 @@ function TierCard({ tier, billing }: { tier: MembershipTier; billing: 'month' | 
 
       <div className="w-full h-px bg-white/8 mb-6" />
 
-      {/* Perks */}
       <ul className="flex flex-col gap-3 mb-8 flex-1">
         {tier.perks.map((perk) => (
           <li key={perk} className="flex items-start gap-3 text-[13px] text-sf-text">
@@ -121,7 +107,6 @@ function TierCard({ tier, billing }: { tier: MembershipTier; billing: 'month' | 
         ))}
       </ul>
 
-      {/* CTA button */}
       <button
         onClick={handleJoin}
         disabled={loading}
@@ -148,7 +133,42 @@ function TierCard({ tier, billing }: { tier: MembershipTier; billing: 'month' | 
 
 // ── Page ──────────────────────────────────────────────────
 export default function FlameSocietyPage() {
-  const [billing, setBilling] = useState<'month' | 'year'>('month')
+  const [billing,    setBilling]    = useState<'month' | 'year'>('month')
+  const [membership, setMembership] = useState<{ tier: string } | null>(null)
+  const { user, session }           = useAuth()
+
+  useEffect(() => {
+    const fetchMembership = async () => {
+      if (!session?.access_token) return
+      try {
+        const res = await api.get<{ membership: { tier: string } | null }>(
+          '/api/membership/status',
+          { Authorization: `Bearer ${session.access_token}` }
+        )
+        setMembership(res.membership)
+      } catch { /* ignore */ }
+    }
+    fetchMembership()
+  }, [session])
+
+  useEffect(() => {
+  const processReferral = async () => {
+    const params = new URLSearchParams(window.location.search)
+    const ref    = params.get('ref')
+    if (!ref || !session?.access_token) return
+
+    try {
+      await api.post(
+        '/api/points/referral',
+        { referral_code: ref },
+        { Authorization: `Bearer ${session.access_token}` }
+      )
+      // Remove ref from URL
+      window.history.replaceState({}, '', '/flame-society')
+    } catch { /* ignore */ }
+  }
+  processReferral()
+}, [session]) 
 
   return (
     <div className="bg-sf-darker">
@@ -204,10 +224,20 @@ export default function FlameSocietyPage() {
               Society
             </span>
           </h1>
-          <p className="text-sf-muted text-[16px] font-light max-w-xl mx-auto leading-relaxed">
+          <p className="text-sf-muted text-[16px] font-light max-w-xl mx-auto leading-relaxed mb-8">
             The official Solar Flare fan membership. Exclusive access, member perks,
             and a community of thousands who burn as bright as we do.
           </p>
+
+          {/* Already a member — show dashboard button */}
+          {user && membership && (
+            <Link
+              to="/flame-society/dashboard"
+              className="inline-flex items-center gap-2 px-10 py-4 bg-sf-orange text-white text-[12px] font-bold tracking-[0.14em] uppercase hover:bg-orange-500 transition-colors duration-200"
+            >
+              🔥 Go to Your Dashboard →
+            </Link>
+          )}
         </div>
 
         <div
@@ -215,6 +245,31 @@ export default function FlameSocietyPage() {
           style={{ background: 'linear-gradient(to top, #060607, transparent)' }}
         />
       </div>
+
+      {/* ── Already a member banner ── */}
+      {user && membership && (
+        <div className="bg-[#1a0a00] border-y border-sf-orange">
+          <div className="max-w-275 mx-auto px-6 md:px-12 py-5 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-[24px]">🔥</span>
+              <div>
+                <p className="font-condensed font-black text-[18px] uppercase text-white leading-tight">
+                  You're already a Flame Society member!
+                </p>
+                <p className="text-[13px] text-[#aaaaaa]">
+                  Access your dashboard to view exclusive content, events and your Flare Points.
+                </p>
+              </div>
+            </div>
+            <Link
+              to="/flame-society/dashboard"
+              className="shrink-0 px-8 py-3 bg-sf-orange text-white text-[12px] font-bold tracking-[0.14em] uppercase hover:bg-orange-500 transition-colors duration-200 whitespace-nowrap"
+            >
+              Open Dashboard →
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* ── Perks strip ── */}
       <section className="max-w-275 mx-auto px-6 md:px-12 py-16">
@@ -260,14 +315,11 @@ export default function FlameSocietyPage() {
             </h2>
           </div>
 
-          {/* Billing toggle */}
           <div className="flex items-center bg-sf-surface p-1 self-start md:self-auto">
             <button
               onClick={() => setBilling('month')}
-              className={`px-5 py-2 text-[11px] font-bold tracking-widest uppercase transition-all duration-200 ${
-                billing === 'month'
-                  ? 'bg-sf-orange text-white'
-                  : 'text-sf-muted hover:text-sf-text'
+              className={`px-5 py-2 text-[11px] font-bold tracking-widests uppercase transition-all duration-200 ${
+                billing === 'month' ? 'bg-sf-orange text-white' : 'text-sf-muted hover:text-sf-text'
               }`}
             >
               Monthly
@@ -275,9 +327,7 @@ export default function FlameSocietyPage() {
             <button
               onClick={() => setBilling('year')}
               className={`px-5 py-2 text-[11px] font-bold tracking-widest uppercase transition-all duration-200 flex items-center gap-2 ${
-                billing === 'year'
-                  ? 'bg-sf-orange text-white'
-                  : 'text-sf-muted hover:text-sf-text'
+                billing === 'year' ? 'bg-sf-orange text-white' : 'text-sf-muted hover:text-sf-text'
               }`}
             >
               Annual
@@ -294,7 +344,6 @@ export default function FlameSocietyPage() {
           ))}
         </div>
 
-        {/* Reassurance strip */}
         <div className="mt-8 flex flex-wrap justify-center gap-8 text-[12px] text-sf-muted">
           {[
             '✓ Cancel anytime',
@@ -318,18 +367,27 @@ export default function FlameSocietyPage() {
               Already a Member?
             </h3>
             <p className="text-sf-muted text-[14px] max-w-md leading-relaxed">
-              Head to the Flame Society Discord and connect with the community.
-              Your role and perks are waiting.
+              Head to your Flame Society dashboard or join our Discord community.
             </p>
           </div>
-          <a
-            href="https://discord.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shrink-0 px-10 py-4 text-[12px] font-bold tracking-[0.14em] uppercase border border-white/20 text-sf-text hover:border-sf-orange hover:text-sf-orange transition-all duration-200 whitespace-nowrap"
-          >
-            Open Discord →
-          </a>
+          <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+            {user && membership && (
+              <Link
+                to="/flame-society/dashboard"
+                className="px-8 py-4 bg-sf-orange text-white text-[12px] font-bold tracking-[0.14em] uppercase hover:bg-orange-500 transition-colors duration-200 whitespace-nowrap"
+              >
+                Open Dashboard →
+              </Link>
+            )}
+            <a
+              href="https://discord.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-10 py-4 text-[12px] font-bold tracking-[0.14em] uppercase border border-white/20 text-sf-text hover:border-sf-orange hover:text-sf-orange transition-all duration-200 whitespace-nowrap"
+            >
+              Open Discord →
+            </a>
+          </div>
         </div>
       </div>
     </div>
