@@ -34,12 +34,12 @@ interface PointsData {
 
 // ── Static Data ──────────────────────────────────────────
 const CONTENT_FEED = [
-  { id: 1, title: 'Behind the Scenes — Free Fire Training Camp',   thumb: '🎬', duration: '8:24',       tag: 'Exclusive'   },
-  { id: 2, title: 'Player Spotlight — Tennyson Chess Masterclass', thumb: '♟️', duration: '12:10',      tag: 'Exclusive'   },
-  { id: 3, title: 'Match Highlights — FFWS Africa Qualifiers',     thumb: '🎮', duration: '3:45',       tag: 'New'         },
-  { id: 4, title: 'How Solar Flare Dominates the Meta',            thumb: '🔥', duration: '5 min read', tag: 'Deep Dive'   },
-  { id: 5, title: 'Exclusive Q&A with Coach Drex',                 thumb: '🎤', duration: '22:30',      tag: 'Members Only'},
-  { id: 6, title: 'Bloopers & Team Moments — January Edition',     thumb: '😂', duration: '6:15',       tag: 'Fun'         },
+  { id: 1, title: 'Behind the Scenes — Free Fire Training Camp',   thumb: '🎬', duration: '8:24',       tag: 'Exclusive'    },
+  { id: 2, title: 'Player Spotlight — Tennyson Chess Masterclass', thumb: '♟️', duration: '12:10',      tag: 'Exclusive'    },
+  { id: 3, title: 'Match Highlights — FFWS Africa Qualifiers',     thumb: '🎮', duration: '3:45',       tag: 'New'          },
+  { id: 4, title: 'How Solar Flare Dominates the Meta',            thumb: '🔥', duration: '5 min read', tag: 'Deep Dive'    },
+  { id: 5, title: 'Exclusive Q&A with Coach Drex',                 thumb: '🎤', duration: '22:30',      tag: 'Members Only' },
+  { id: 6, title: 'Bloopers & Team Moments — January Edition',     thumb: '😂', duration: '6:15',       tag: 'Fun'          },
 ]
 
 const EVENTS = [
@@ -49,21 +49,21 @@ const EVENTS = [
 ]
 
 const BENEFITS = [
-  { emoji: '👕', title: 'Early Merch Access',  desc: 'Shop new drops 48hrs before the public'    },
-  { emoji: '💬', title: 'Private Community',   desc: 'Members-only Discord channels and chat'    },
-  { emoji: '🎥', title: 'Exclusive Content',   desc: 'Behind the scenes, player vlogs and more'  },
-  { emoji: '🎁', title: 'Monthly Giveaways',   desc: 'Win jerseys, gear and signed merchandise'  },
-  { emoji: '🏆', title: 'Tournament Access',   desc: 'Enter private members-only tournaments'    },
-  { emoji: '⚡', title: 'Priority Support',    desc: 'Fast-track responses from the SF team'     },
+  { emoji: '👕', title: 'Early Merch Access',  desc: 'Shop new drops 48hrs before the public'   },
+  { emoji: '💬', title: 'Private Community',   desc: 'Members-only Discord channels and chat'   },
+  { emoji: '🎥', title: 'Exclusive Content',   desc: 'Behind the scenes, player vlogs and more' },
+  { emoji: '🎁', title: 'Monthly Giveaways',   desc: 'Win jerseys, gear and signed merchandise' },
+  { emoji: '🏆', title: 'Tournament Access',   desc: 'Enter private members-only tournaments'   },
+  { emoji: '⚡', title: 'Priority Support',    desc: 'Fast-track responses from the SF team'    },
 ]
 
-const HOW_TO_EARN = [ 
-  { emoji: '👋', action: 'Join Flame Society',       points: 500  },
-  { emoji: '🎥', action: 'Watch exclusive content',  points: 50   },
-  { emoji: '🛍️', action: 'Buy merch from the store', points: 700 },
-  { emoji: '👥', action: 'Invite a friend',          points: 300  },
-  { emoji: '💬', action: 'Engage in community',      points: 25   },
-  { emoji: '🏆', action: 'Win a tournament',         points: 1000 },
+const HOW_TO_EARN = [
+  { emoji: '👋', action: 'Join Flame Society',        points: 500  },
+  { emoji: '🎥', action: 'Watch exclusive content',   points: 50   },
+  { emoji: '🛍️', action: 'Buy merch from the store', points: 200  },
+  { emoji: '👥', action: 'Invite a friend',           points: 300  },
+  { emoji: '💬', action: 'Engage in community',       points: 25   },
+  { emoji: '🏆', action: 'Win a tournament',          points: 1000 },
 ]
 
 // ── Countdown ────────────────────────────────────────────
@@ -134,7 +134,7 @@ function DashboardHeader({ onSignOut }: { onSignOut: () => void }) {
           </a>
         ))}
         <Link to="/account"
-          className="px-4 py-2 text-[11px] font-bold tracking-widests uppercase text-[#aaaaaa] hover:text-white hover:bg-[#1a1a1d] transition-all duration-150"
+          className="px-4 py-2 text-[11px] font-bold tracking-widest uppercase text-[#aaaaaa] hover:text-white hover:bg-[#1a1a1d] transition-all duration-150"
         >
           Profile
         </Link>
@@ -176,24 +176,59 @@ function DashboardHeader({ onSignOut }: { onSignOut: () => void }) {
   )
 }
 
+// ── Toast notification ───────────────────────────────────
+function Toast({ message, onHide }: { message: string; onHide: () => void }) {
+  useEffect(() => {
+    const t = setTimeout(onHide, 3000)
+    return () => clearTimeout(t)
+  }, [onHide])
+
+  return (
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-green-600 text-white px-6 py-3 text-[13px] font-bold tracking-[0.08em] uppercase border border-green-500 shadow-xl">
+      ✓ {message}
+    </div>
+  )
+}
+
 // ── Main Page ────────────────────────────────────────────
 export default function FlameSocietyDashboard() {
   const { user, session, signOut, loading } = useAuth()
   const navigate = useNavigate()
 
-  const [membership,    setMembership]    = useState<Membership | null>(null)
-  const [pointsData,    setPointsData]    = useState<PointsData>({ points: 0, rank: null, log: [], leaderboard: [] })
-  const [loadingPoints, setLoadingPoints] = useState(true)
-  const [showEarnModal, setShowEarnModal] = useState(false)
+  const [membership,     setMembership]     = useState<Membership | null>(null)
+  const [pointsData,     setPointsData]     = useState<PointsData>({ points: 0, rank: null, log: [], leaderboard: [] })
+  const [loadingPoints,  setLoadingPoints]  = useState(true)
+  const [showEarnModal,  setShowEarnModal]  = useState(false)
+  const [watchedContent, setWatchedContent] = useState<Set<number>>(new Set())
+  const [toast,          setToast]          = useState('')
 
   useEffect(() => {
     if (!loading && !user) navigate('/login')
   }, [user, loading, navigate])
 
+  // ── Fetch points from API ────────────────────────────
+  const fetchPoints = useCallback(async () => {
+    if (!session?.access_token) return
+    try {
+      const res = await api.get<{ success: boolean } & PointsData>(
+        '/api/points',
+        { Authorization: `Bearer ${session.access_token}` }
+      )
+      setPointsData({
+        points:      res.points      ?? 0,
+        rank:        res.rank        ?? null,
+        log:         res.log         ?? [],
+        leaderboard: res.leaderboard ?? [],
+      })
+    } catch {
+      console.error('Failed to fetch points')
+    }
+  }, [session])
+
+  // ── Fetch all data on load ───────────────────────────
   const fetchData = useCallback(async () => {
     if (!session?.access_token) return
     try {
-      // Fetch membership
       const memberRes = await api.get<{ membership: Membership | null }>(
         '/api/membership/status',
         { Authorization: `Bearer ${session.access_token}` }
@@ -201,58 +236,59 @@ export default function FlameSocietyDashboard() {
       setMembership(memberRes.membership)
       if (!memberRes.membership) { navigate('/flame-society'); return }
 
-      // Award join points (silently — will fail if already awarded)
+      // Award join points silently
       api.post(
         '/api/points/award',
         { action: 'joined_flame_society' },
         { Authorization: `Bearer ${session.access_token}` }
       ).catch(() => {})
 
-      // Fetch points
-      const pointsRes = await api.get<{ success: boolean } & PointsData>(
-        '/api/points',
-        { Authorization: `Bearer ${session.access_token}` }
-      )
-      setPointsData({
-        points:      pointsRes.points      ?? 0,
-        rank:        pointsRes.rank        ?? null,
-        log:         pointsRes.log         ?? [],
-        leaderboard: pointsRes.leaderboard ?? [],
-      })
+      await fetchPoints()
     } catch {
       navigate('/flame-society')
     } finally {
       setLoadingPoints(false)
     }
-  }, [session, navigate])
+  }, [session, navigate, fetchPoints])
 
   useEffect(() => { fetchData() }, [fetchData])
 
-  // Track which content items have been watched this session
- const [watchedContent, setWatchedContent] = useState<Set<number>>(new Set())
-  // Award points for watching content
- const handleWatchContent = async (contentId: number) => {
-  if (!session?.access_token) return
-  if (watchedContent.has(contentId)) return // already watched this session 
-      try {
-    const res = await api.post<{ success: boolean; points: number; total: number }>(
-      '/api/points/award',
-      { action: 'watched_content', meta: { contentId } },
-      { Authorization: `Bearer ${session.access_token}` }
-    )
-    if (res.success) {
-      setWatchedContent((prev) => new Set([...prev, contentId]))
-      // Update points display
-      setPointsData((prev) => ({
-        ...prev,
-        points: res.total,
-        log: [
-          { action: `watched_content:${contentId}`, points: res.points, created_at: new Date().toISOString() },
-          ...prev.log,
-        ],
-      }))
+  // ── Watch content ────────────────────────────────────
+  const handleWatchContent = async (contentId: number) => {
+    if (!session?.access_token) return
+    if (watchedContent.has(contentId)) return
+
+    // Mark as watched immediately for instant UI feedback
+    setWatchedContent((prev) => new Set([...prev, contentId]))
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/points/award`,
+        {
+          method:  'POST',
+          headers: {
+            'Content-Type':  'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            action: 'watched_content',
+            meta:   { contentId },
+          }),
+        }
+      )
+
+      const data = await response.json()
+
+      if (data.success) {
+        // Show toast
+        setToast('+50 XP earned for watching!')
+        // Refresh points from server
+        await fetchPoints()
+      }
+      // If not success (already watched) — UI already marked as watched, no toast
+    } catch {
+      console.error('Failed to award watch points')
     }
-  } catch { /* already watched */ } 
   }
 
   const handleSignOut = async () => {
@@ -268,24 +304,24 @@ export default function FlameSocietyDashboard() {
 
   if (!user) return null
 
-  const name       = user.user_metadata?.name || user.email?.split('@')[0] || 'Flame Member'
-  const tierLabel  = membership?.plan_name ?? 'Flame Member'
-  const userPoints = pointsData.points
-  const userRank   = pointsData.rank ?? 0
+  const name           = user.user_metadata?.name || user.email?.split('@')[0] || 'Flame Member'
+  const tierLabel      = membership?.plan_name ?? 'Flame Member'
+  const userPoints     = pointsData.points
+  const userRank       = pointsData.rank ?? 0
+  const nextTierPoints = 2000
+  const progressPct    = Math.min(Math.round((userPoints / nextTierPoints) * 100), 100)
 
   const tierColors: Record<string, string> = {
     spark: '#FF6A00', flare: '#FFB800', solar: '#FFE566',
   }
   const tierColor = tierColors[membership?.tier ?? 'spark'] ?? '#FF6A00'
 
-  // Progress to next tier
-  const nextTierPoints = 2000
-  const progressPct    = Math.min(Math.round((userPoints / nextTierPoints) * 100), 100)
-
   return (
     <>
       <SEO url="/flame-society/dashboard" title="Flame Society Dashboard" noIndex />
       <DashboardHeader onSignOut={handleSignOut} />
+
+      {toast && <Toast message={toast} onHide={() => setToast('')} />}
 
       <div className="bg-[#060607] min-h-screen pt-16">
 
@@ -340,7 +376,6 @@ export default function FlameSocietyDashboard() {
                 </a>
               </div>
 
-              {/* Tier badge */}
               <div className="shrink-0 hidden md:flex flex-col items-center gap-3">
                 <div
                   className="w-32 h-32 flex items-center justify-center text-[56px]"
@@ -364,10 +399,10 @@ export default function FlameSocietyDashboard() {
             <h2 className="font-condensed font-black text-[36px] uppercase text-white leading-none mb-8">What's Next</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {[
-                { emoji: '🎥', label: 'Watch Exclusive Content', href: '#content',          external: false },
+                { emoji: '🎥', label: 'Watch Exclusive Content', href: '#content',           external: false },
                 { emoji: '💬', label: 'Join Community',          href: 'https://discord.com', external: true  },
-                { emoji: '🛍️', label: 'View Upcoming Drop',     href: '#drops',             external: false },
-                { emoji: '🎮', label: 'Enter Tournament',        href: '#events',            external: false },
+                { emoji: '🛍️', label: 'View Upcoming Drop',     href: '#drops',              external: false },
+                { emoji: '🎮', label: 'Enter Tournament',        href: '#events',             external: false },
               ].map((action) =>
                 action.external ? (
                   <a key={action.label} href={action.href} target="_blank" rel="noopener noreferrer"
@@ -400,41 +435,43 @@ export default function FlameSocietyDashboard() {
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
               {CONTENT_FEED.map((item) => (
-  <div
-    key={item.id}
-    onClick={() => handleWatchContent(item.id)}
-    className={`bg-[#1a1a1d] border transition-all duration-200 cursor-pointer group ${
-      watchedContent.has(item.id) ? 'border-green-600' : 'border-[#2a2a2e] hover:border-sf-orange'
-    }`}
-  >
-    <div className="aspect-video bg-[#242428] flex items-center justify-center relative border-b border-[#2a2a2e]">
-      <span className="text-[48px] group-hover:scale-110 transition-transform duration-300">{item.thumb}</span>
-      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-        <div className="w-12 h-12 bg-sf-orange flex items-center justify-center">
-          <span className="text-white text-[20px] ml-1">▶</span>
-        </div>
-      </div>
-      <div className="absolute top-2 left-2 text-[9px] font-black tracking-widest uppercase px-2 py-1 bg-sf-orange text-white">
-        {item.tag}
-      </div>
-      <div className="absolute bottom-2 right-2 text-[10px] font-bold text-white bg-[#060607] px-2 py-0.5 border border-[#2a2a2e]">
-        {item.duration}
-      </div>
-      {watchedContent.has(item.id) && (
-        <div className="absolute top-2 right-2 bg-green-600 text-white text-[9px] font-black px-2 py-1">
-          ✓ Watched
-        </div>
-      )}
-    </div>
-    <div className="p-4">
-      <p className="text-[13px] font-bold text-white leading-snug group-hover:text-sf-orange transition-colors">
-        {item.title}
-      </p>
-      <p className={`text-[10px] mt-1 font-semibold ${watchedContent.has(item.id) ? 'text-green-400' : 'text-sf-orange'}`}>
-        {watchedContent.has(item.id) ? '✓ +50 XP earned' : '+50 XP for watching'}
-      </p>
-    </div>
-  </div>
+                <div
+                  key={item.id}
+                  onClick={() => handleWatchContent(item.id)}
+                  className={`bg-[#1a1a1d] border transition-all duration-200 cursor-pointer group ${
+                    watchedContent.has(item.id)
+                      ? 'border-green-600'
+                      : 'border-[#2a2a2e] hover:border-sf-orange'
+                  }`}
+                >
+                  <div className="aspect-video bg-[#242428] flex items-center justify-center relative border-b border-[#2a2a2e]">
+                    <span className="text-[48px] group-hover:scale-110 transition-transform duration-300">{item.thumb}</span>
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <div className="w-12 h-12 bg-sf-orange flex items-center justify-center">
+                        <span className="text-white text-[20px] ml-1">▶</span>
+                      </div>
+                    </div>
+                    <div className="absolute top-2 left-2 text-[9px] font-black tracking-widest uppercase px-2 py-1 bg-sf-orange text-white">
+                      {item.tag}
+                    </div>
+                    <div className="absolute bottom-2 right-2 text-[10px] font-bold text-white bg-[#060607] px-2 py-0.5 border border-[#2a2a2e]">
+                      {item.duration}
+                    </div>
+                    {watchedContent.has(item.id) && (
+                      <div className="absolute top-2 right-2 bg-green-600 text-white text-[9px] font-black px-2 py-1">
+                        ✓ Watched
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-4">
+                    <p className="text-[13px] font-bold text-white leading-snug group-hover:text-sf-orange transition-colors">
+                      {item.title}
+                    </p>
+                    <p className={`text-[10px] mt-1 font-semibold ${watchedContent.has(item.id) ? 'text-green-400' : 'text-sf-orange'}`}>
+                      {watchedContent.has(item.id) ? '✓ +50 XP earned' : '+50 XP for watching'}
+                    </p>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
@@ -459,14 +496,11 @@ export default function FlameSocietyDashboard() {
                       const rank = i + 1
                       const isMe = entry.user_id === user.id
                       return (
-                        <div
-                          key={entry.user_id}
+                        <div key={entry.user_id}
                           className={`flex items-center gap-4 px-4 py-3 border ${
-                            isMe
-                              ? 'border-sf-orange bg-[#FF6A00]/10'
-                              : rank === 1
-                              ? 'border-sf-orange bg-[#FF6A00]/5'
-                              : 'border-[#2a2a2e] bg-[#242428]'
+                            isMe ? 'border-sf-orange bg-[#FF6A00]/10' :
+                            rank === 1 ? 'border-sf-orange bg-[#FF6A00]/5' :
+                            'border-[#2a2a2e] bg-[#242428]'
                           }`}
                         >
                           <span className={`font-condensed font-black text-[20px] w-8 text-center ${
@@ -486,7 +520,6 @@ export default function FlameSocietyDashboard() {
                       )
                     })
                   ) : (
-                    // Fallback placeholder leaderboard
                     [
                       { rank: 1, name: '@blaze_official', points: 3200 },
                       { rank: 2, name: '@sf_legend',      points: 2800 },
@@ -502,7 +535,6 @@ export default function FlameSocietyDashboard() {
                     ))
                   )}
 
-                  {/* Current user row */}
                   {!loadingPoints && userPoints > 0 && (
                     <div className="flex items-center gap-4 px-4 py-3 border-2 border-sf-orange bg-[#FF6A00]/10 mt-2">
                       <span className="font-condensed font-black text-[20px] w-8 text-center text-sf-orange">
@@ -547,7 +579,6 @@ export default function FlameSocietyDashboard() {
                   </p>
                   <p className="text-[12px] text-[#aaaaaa] mb-6">XP earned total</p>
 
-                  {/* Progress bar */}
                   <div className="mb-6">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[11px] font-bold uppercase text-[#aaaaaa]">Next tier at {nextTierPoints.toLocaleString()} XP</span>
@@ -561,7 +592,6 @@ export default function FlameSocietyDashboard() {
                     </div>
                   </div>
 
-                  {/* Activity log */}
                   <p className="text-[11px] font-bold tracking-widest uppercase text-[#aaaaaa] mb-3">Recent Activity</p>
                   <div className="flex flex-col gap-2">
                     {pointsData.log.length > 0 ? (
@@ -569,7 +599,7 @@ export default function FlameSocietyDashboard() {
                         <div key={i} className="flex items-center justify-between py-2 border-b border-[#2a2a2e] last:border-0">
                           <div>
                             <p className="text-[12px] font-semibold text-white capitalize">
-                              {entry.action.replace(/_/g, ' ')}
+                              {entry.action.split(':')[0].replace(/_/g, ' ')}
                             </p>
                             <p className="text-[10px] text-[#aaaaaa]">
                               {new Date(entry.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
