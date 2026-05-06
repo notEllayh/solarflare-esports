@@ -58,26 +58,26 @@ function DivisionCard({ division }: { division: Division }) {
           background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%)',
         }}
       >
-        <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-sf-orange mb-1.5">
-          {division.category}
-        </span>
-        <h3 className="font-condensed font-black text-[28px] uppercase leading-none text-sf-text">
-          {division.game}
-        </h3>
-        <div className="flex items-center justify-between mt-2">
-          <p className="text-sf-muted text-[12px]">
-            {division.playerCount} Players · {division.league}
-          </p>
-          <p
-            className="text-[10px] font-bold tracking-widest uppercase transition-all duration-200"
-            style={{
-              opacity: hovered ? 1 : 0,
-              color: '#FF6A00',
-            }}
-          >
-            View Team
-          </p>
-        </div>
+        <span className="text-[9px] md:text-[10px] font-bold tracking-widest uppercase text-sf-orange mb-1 truncate block">
+  {division.category}
+</span>
+        <h3 className="font-condensed font-black text-[22px] md:text-[28px] uppercase leading-none text-sf-text truncate">
+  {division.game}
+</h3>
+        <div className="flex flex-col gap-1 mt-2">
+  <p className="text-sf-muted text-[11px] truncate">
+    {division.playerCount} Players · {division.league}
+  </p>
+  <p 
+    className="text-[10px] font-bold tracking-widest uppercase transition-all duration-200"
+    style={{
+      opacity: hovered ? 1 : 0,
+      color: '#FF6A00',
+    }}
+  >
+    View Team
+  </p>
+</div>
       </div>
     </Link>
   )

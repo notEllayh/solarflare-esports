@@ -36,7 +36,7 @@ function StaffCard({ member }: { member: StaffMember }) {
         </div>
 
         {/* Bottom fade */}
-        <div
+        <div 
           className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none"
           style={{ background: 'linear-gradient(to top, #1C1C1F 0%, transparent 100%)' }}
         />

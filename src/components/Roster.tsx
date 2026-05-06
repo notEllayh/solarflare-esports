@@ -1,11 +1,19 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { players, type Player } from '../data/siteData'
-import LazyImage from './LazyImage' 
+import { api } from '../lib/api'
+import LazyImage from './LazyImage'
+
+interface Player {
+  id:        string
+  alias:     string
+  real_name: string
+  role:      string
+  division:  string
+  country:   string
+  image:     string
+}
 
 function PlayerCard({ player }: { player: Player }) {
-  const [imgError,] = useState(false)
-
   return (
     <Link
       to={`/roster/${player.id}`}
@@ -15,7 +23,7 @@ function PlayerCard({ player }: { player: Player }) {
         className="w-full relative overflow-hidden bg-sf-mid"
         style={{ aspectRatio: '3/4' }}
       >
-        {!imgError ? (
+        {player.image ? (
           <LazyImage
             src={player.image}
             alt={player.alias}
@@ -50,8 +58,8 @@ function PlayerCard({ player }: { player: Player }) {
         />
 
         <div className="absolute bottom-0 left-0 right-0 px-4 pb-3">
-          <h3 className="font-condensed font-black text-[26px] uppercase leading-none text-sf-text tracking-wide">
-            {player.alias}
+         <h3 className="font-condensed font-black text-[20px] uppercase leading-none text-sf-text tracking-wide truncate">
+             {player.alias}
           </h3>
         </div>
       </div>
@@ -61,7 +69,7 @@ function PlayerCard({ player }: { player: Player }) {
           {player.role} · {player.division}
         </p>
         <p className="text-[13px] text-sf-muted">
-          {player.realName}
+          {player.real_name}
         </p>
       </div>
 
@@ -74,6 +82,34 @@ function PlayerCard({ player }: { player: Player }) {
 }
 
 export default function Roster() {
+  const [players, setPlayers] = useState<Player[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      try {
+        const res = await api.get<{ data: Player[] }>('/api/players')
+        setPlayers((res.data ?? []).slice(0, 5))
+      } catch {
+        console.error('Failed to fetch players')
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchPlayers()
+  }, [])
+
+  if (loading) return (
+    <section id="roster" className="max-w-275 mx-auto px-6 md:px-12 pb-24">
+      <div className="flex items-center gap-3 text-sf-muted py-12">
+        <span className="w-5 h-5 border-2 border-sf-muted/30 border-t-sf-orange rounded-full animate-spin block" />
+        Loading roster...
+      </div>
+    </section>
+  )
+
+  if (players.length === 0) return null
+
   return (
     <section id="roster" className="max-w-275 mx-auto px-6 md:px-12 pb-24">
       <div className="flex items-end justify-between mb-12">

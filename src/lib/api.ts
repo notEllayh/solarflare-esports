@@ -35,4 +35,17 @@ export const api = {
       method: 'GET',
       headers,
     }),
+
+  delete: <T>(endpoint: string, headers?: HeadersInit) =>
+  request<T>(endpoint, {
+    method: 'DELETE',
+    headers,
+  }),
+
+  put: <T>(endpoint: string, body: unknown, headers?: HeadersInit) =>
+  request<T>(endpoint, {
+    method:  'PUT',
+    body:    JSON.stringify(body),
+    headers,
+  }), 
 } 
