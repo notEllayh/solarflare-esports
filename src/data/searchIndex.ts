@@ -34,11 +34,11 @@ export const searchIndex: SearchResult[] = [
   ...divisions.map((d) => ({
     id:       `division-${d.id}`,
     title:    d.game,
-    subtitle: `${d.category} · ${d.league}`,
+    subtitle: `${d.category} Division`,
     category: 'Division',
     href:     `/teams/${d.id}`,
     emoji:    d.emoji,
-  })),
+  })), 
 
   // Team details
   ...teamDetails.map((t) => ({
