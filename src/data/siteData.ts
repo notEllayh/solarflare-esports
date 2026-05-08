@@ -2,7 +2,7 @@ export interface Division {
   id: string
   game: string
   category: string
-  league: string
+  //league: string
   playerCount: number
   emoji: string
 }
@@ -11,7 +11,7 @@ export const divisionIdMap: Record<string, string> = {
   'Free Fire': 'freefire',
   'Chess':     'chess',
   'eFootball': 'efootball',
-  'EA FC 25':  'fc',
+  'EA FC 26':  'fc',
 }
 
 export interface PlayerStat {
@@ -78,10 +78,10 @@ export const stats = [
 ]
 
 export const divisions: Division[] = [
-  { id: 'freefire',  game: 'Free Fire',         category: 'Battle Royale',   league: 'FFWS AFRICA',      playerCount: 6, emoji: '🎯' },
-  { id: 'chess',  game: 'Chess',             category: 'Strategy',          league: 'Zone 4.2 West Africa Championship',            playerCount: 1, emoji: '♟️' },
-  { id: 'efootball',  game: 'eFootball',              category: 'Sports Sim',   league: 'Club Open', playerCount: 2, emoji: '🔫' },
-  { id: 'fc',   game: 'EA FC 26',         category: 'Sports Sim',       league: 'CADE Elite League',     playerCount: 1, emoji: '🏆' },
+  { id: 'freefire',  game: 'Free Fire',         category: 'Battle Royale',playerCount: 6, emoji: '🎯' },
+  { id: 'chess',  game: 'Chess',             category: 'Strategy',   playerCount: 1, emoji: '♟️' },
+  { id: 'efootball',  game: 'eFootball',              category: 'Sports Sim',  playerCount: 2, emoji: '🔫' },
+  { id: 'fc',   game: 'EA FC 26',         category: 'Sports Sim',   playerCount: 1, emoji: '🏆' },
 ] 
 
 export const players: Player[] = [
@@ -207,6 +207,82 @@ export const news: NewsItem[] = [
   content: []
   },
 ]
+
+export interface Creator {
+  id:       string
+  name:     string
+  handle:   string
+  niche:    string
+  bio:      string
+  photo:    string
+  banner:   string
+  socials:  { platform: string; handle: string; href: string; followers: string }[]
+  content:  { id: number; title: string; thumb: string; views: string; platform: string; url: string }[]
+}
+
+// Content creator data structure
+export const creators: Creator[] = [
+  {
+    id:     'creator-1', 
+    name:   'RagnarExe',       // ← replace
+    handle: '@ragnarexe',             // ← replace
+    niche:  'Content Creation & Esports',
+    bio:    'Get my Sensi + Edit Pack on my Tiktok bio.',  // ← replace
+    photo:  '/players/ragnar.jpg',     // ← replace with real image path
+    banner: '/creators/ragnarbanner.jpg',    // ← replace with real image path
+    socials: [
+      { platform: 'TikTok',    handle: '@ragnar.exeee', href: 'https://tiktok.com/@ragnar.exeee',    followers: '130,000' },
+      { platform: 'YouTube',   handle: '@RagnarExee', href: 'https://youtube.com/@RagnarExee',   followers: '730' },
+      { platform: 'Instagram', handle: '@ragnar.exe99', href: 'https://instagram.com/@ragnar.exe99',  followers: '6,200' },
+    ],
+    content: [
+      { id: 1, title: 'Recent Video Title 1', thumb: '/creators/thumb1.jpg', views: '0K views', platform: 'YouTube',   url: '#' },
+      { id: 2, title: 'Recent Video Title 2', thumb: '/creators/thumb2.jpg', views: '0K views', platform: 'TikTok',    url: '#' },
+      { id: 3, title: 'Recent Video Title 3', thumb: '/creators/thumb3.jpg', views: '0K views', platform: 'Instagram', url: '#' },
+    ],
+  }, 
+
+  {
+    id:     'creator-2',
+    name:   'Kida',       // ← replace
+    handle: '@kidaefb',             // ← replace
+    niche:  'Gaming & Esports',
+    bio:    'Live daily, sharing tips and gameplay.',  // ← replace
+    photo:  '/creators/KidaContentCreator.jpg',     // ← replace with real image path
+    banner: '/creators/kidabanner.jpg',    // ← replace with real image path
+    socials: [
+      { platform: 'TikTok',    handle: '@kidaefb', href: 'https://tiktok.com/@kidaefb',    followers: '100K' },
+      { platform: 'YouTube',   handle: '@kidaefb', href: 'https://youtube.com/@kidaefb',   followers: '1.3K' },
+      { platform: 'Instagram', handle: '@kidaefb', href: 'https://instagram.com/@kidaefb_',  followers: '200' },
+      { platform: 'Kick',      handle: '@kidaefb', href: 'https://kick.com/@kidaefb',       followers: '80' },
+    ],
+    content: [
+      { id: 1, title: 'Recent Video Title 1', thumb: '/creators/thumb1.jpg', views: '0K views', platform: 'YouTube',   url: '#' },
+      { id: 2, title: 'Recent Video Title 2', thumb: '/creators/thumb2.jpg', views: '0K views', platform: 'TikTok',    url: '#' },
+      { id: 3, title: 'Recent Video Title 3', thumb: '/creators/thumb3.jpg', views: '0K views', platform: 'Instagram', url: '#' },
+    ],
+  },
+
+  {
+    id:     'creator-3', 
+    name:   'Bigjay Gaming',       // ← replace
+    handle: '@bigjaygaming',             // ← replace
+    niche:  'Esports & Content Creation',
+    bio:    'eFootball division ranking, road to rank 1.',  // ← replace
+    photo:  '/players/bigjay.jpeg',     // ← replace with real image path
+    banner: '/creators/bigjaybanner.jpg',    // ← replace with real image path
+    socials: [
+      { platform: 'TikTok',    handle: '@bigjay_gaming', href: 'https://tiktok.com/@bigjay_gaming',    followers: '4300' },
+      { platform: 'YouTube',   handle: '@BIGJAYgaming01', href: 'https://youtube.com/@BIGJAYgaming01',   followers: '460' },
+      { platform: 'Instagram', handle: '@bigjaygaming01', href: 'https://instagram.com/@bigjaygaming01',  followers: '180' },
+    ],
+    content: [
+      { id: 1, title: 'Recent Video Title 1', thumb: '/creators/thumb1.jpg', views: '0K views', platform: 'YouTube',   url: '#' },
+      { id: 2, title: 'Recent Video Title 2', thumb: '/creators/thumb2.jpg', views: '0K views', platform: 'TikTok',    url: '#' },
+      { id: 3, title: 'Recent Video Title 3', thumb: '/creators/thumb3.jpg', views: '0K views', platform: 'Instagram', url: '#' },
+    ],
+  }, 
+] 
 
 // Live Match/Results tracker, Partners showcase page
 export type MatchStatus = 'live' | 'upcoming' | 'completed'
@@ -427,14 +503,16 @@ export const sponsors: Sponsor[] = [
   { name: 'PayStack' },
 ]
 
+// Navigation links for header
 export const navLinks = [
+  { label: 'Home',   href: '/' }, 
   { label: 'Teams',    href: '/teams' },
-  { label: 'Matches',  href: '/matches' },
-  { label: 'Roster',   href: '/roster' },
-  { label: 'News',     href: '/news' },
   { label: 'Partners', href: '/partners' },
+  { label: 'Gallery', href: '/gallery' },
+  { label: 'Schedule',  href: '/matches' },
   { label: 'About',    href: '/about' },
   { label: 'Careers',  href: '/careers' },
+  { label: 'Creators', href: '/creators' },
 ]
 
 export interface Product {
@@ -457,21 +535,21 @@ export interface JobRole {
 }
 
 export const products: Product[] = [
-  { id: 'jersey-home',   name: 'SF Home Jersey 2026',       category: 'Jerseys',      price: 89.99,  badge: 'New',      emoji: '👕', colors: ['#FF6A00', '#141416'] },
-  { id: 'jersey-away',   name: 'SF Away Jersey 2026',       category: 'Jerseys',      price: 89.99,  badge: 'New',      emoji: '👕', colors: ['#F5F5F0', '#FF6A00'] },
-  { id: 'hoodie',        name: 'Solar Flare Pullover Hoodie',category: 'Apparel',      price: 74.99,                     emoji: '🧥', colors: ['#141416', '#888884'] },
-  { id: 'cap',           name: 'SF Snapback Cap',            category: 'Accessories',  price: 34.99,                     emoji: '🧢', colors: ['#141416', '#FF6A00'] },
-  { id: 'mousepad',      name: 'SF XL Gaming Mousepad',     category: 'Gear',         price: 44.99,  badge: 'Bestseller',emoji: '🖱️', colors: ['#0A0A0B'] },
-  { id: 'tracksuit',     name: 'Pro Tracksuit 2026',         category: 'Apparel',      price: 129.99, badge: 'Limited',  emoji: '🥋', colors: ['#FF6A00', '#141416'] },
-  { id: 'tee',           name: 'Flare Graphic Tee',          category: 'Apparel',      price: 39.99,                     emoji: '👕', colors: ['#141416', '#1C1C1F'] },
-  { id: 'water-bottle',  name: 'SF Insulated Bottle',        category: 'Accessories',  price: 29.99,                     emoji: '🍶', colors: ['#FF6A00'] },
+  { id: 'jersey-home',   name: 'Pro Flare Kit 2026 - Jersey',       category: 'Jerseys',      price: 35000,  badge: 'New',      emoji: '/shop/SolarFlareHomeBlack.PNG', colors: ['#141416'] },
+  { id: 'jersey-away',   name: 'Pro Flare Kit 2026 - Away Jersey',       category: 'Jerseys',      price: 30000,  badge: 'New',      emoji: '/shop/SolarFlareAwayWhite.png', colors: ['#F5F5F0'] },
+  { id: 'hoodie',        name: 'Cozy Flare Hoodie',category: 'Apparel',      price: 40000, badge: 'Coming Soon',                    emoji: '🧥', colors: ['#141416'] },
+  { id: 'cap',           name: 'Essential Cap',            category: 'Accessories',  price: 8000,  badge: 'Trending',                   emoji: '🧢', colors: ['#141416'] },
+  //{ id: 'mousepad',      name: 'SF XL Gaming Mousepad',     category: 'Gear',         price: 44.99,  badge: '',emoji: '🖱️', colors: ['#0A0A0B'] },
+  { id: 'tracksuit',     name: 'Flare Tracksuit',         category: 'Apparel',      price: 60000, badge: 'Coming Soon',  emoji: '🥋', colors: ['#141416'] },
+  { id: 'tee',           name: 'Champion Of The West',          category: 'Apparel',      price: 28000, badge: 'COTW Edition',                    emoji: '👕', colors: ['#141416', '#1C1C1F'] },
+  //{ id: 'water-bottle',  name: 'SF Insulated Bottle',        category: 'Accessories',  price: 29.99, badge: 'Coming Soon',                   emoji: '🍶', colors: ['#FF6A00'] },
 ]
 
 export const shopCategories = ['All', 'Jerseys', 'Apparel', 'Gear', 'Accessories']
 
 export const jobRoles: JobRole[] = [
   {
-    id: 'performance-coach',
+    id: 'performance-coach', 
     title: 'Performance Coach',
     department: 'Athletic',
     location: 'Lagos, Nigeria',
@@ -1283,7 +1361,7 @@ export const accessibilitySections: LegalSection[] = [
 
 // Footer Links
 export const footerLinks = {
-  Teams:        ['Free Fire', 'Chess', 'eFootball', 'EA FC 26', 'Coming Soon...'],
+  //Teams:        ['Free Fire', 'Chess', 'eFootball', 'EA FC 26', 'Coming Soon...'],
   Company: ['About Us', 'Careers', 'Press', 'Partners', 'Contact'],
   Community:    ['Flame Society', 'Discord', 'Shop', 'Events', 'Gallery'],
    Support:      ['FAQ', 'Shipping Info', 'Returns', 'Size Guide', 'Get in Touch'],

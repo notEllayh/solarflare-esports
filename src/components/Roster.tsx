@@ -114,18 +114,18 @@ export default function Roster() {
     <section id="roster" className="max-w-275 mx-auto px-6 md:px-12 pb-24">
       <div className="flex items-end justify-between mb-12">
         <div>
-          <p className="text-[11px] font-bold tracking-[0.15em] uppercase text-sf-orange mb-3">
+          <p className="text-[11px] font-bold tracking-[0.15em] uppercase text-[#ff6c00] mb-3">
             Featured Roster
           </p>
           <h2
             className="font-condensed font-black uppercase leading-[0.95]"
             style={{ fontSize: 'clamp(36px, 5vw, 60px)' }}
           >
-            The<br />Flare Squad
+            The<br/>Flare Squad
           </h2>
         </div>
         <Link
-          to="/roster"
+          to="/teams"
           className="hidden md:inline-block px-7 py-3 text-sf-text text-[11px] font-bold tracking-[0.12em] uppercase border border-white/15 hover:border-white/40 transition-colors duration-200 whitespace-nowrap"
         >
           Full Roster →

@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { divisions, type Division } from '../data/siteData'
 
+
 function DivisionCard({ division }: { division: Division }) {
   const [hovered, setHovered] = useState(false)
 
@@ -66,7 +67,7 @@ function DivisionCard({ division }: { division: Division }) {
 </h3>
         <div className="flex flex-col gap-1 mt-2">
   <p className="text-sf-muted text-[11px] truncate">
-    {division.playerCount} Players · {division.league}
+    {division.playerCount} Players 
   </p>
   <p 
     className="text-[10px] font-bold tracking-widest uppercase transition-all duration-200"

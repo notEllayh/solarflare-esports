@@ -6,6 +6,8 @@ import LoginPage          from './pages/LoginPage'
 import SignupPage         from './pages/SignupPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import AccountPage from './pages/AccountPage'
+import CreatorsPage        from './pages/CreatorsPage'
+import CreatorProfilePage  from './pages/CreatorProfilePage'
 import MembershipVerifyPage from './pages/MembershipVerifyPage'
 import FlameSocietyDashboard from './pages/FlameSocietyDashboard' 
 import ScrollToTopOnNavigate from './components/ScrollToTopOnNavigate'
@@ -13,13 +15,12 @@ import Footer from './components/Footer'
 import CookieBanner from './components/CookieBanner'
 import ScrollToTop from './components/ScrollToTop'
 import SplashScreen from './components/SplashScreen'
-import PageTransition from './components/PageTransition'
+import PageTransition from './components/PageTransition' 
 
 // Lazy loaded pages — each becomes its own chunk
 const HomePage          = lazy(() => import('./pages/HomePage'))
 const TeamsPage         = lazy(() => import('./pages/TeamsPage'))
 const TeamDetailPage    = lazy(() => import('./pages/TeamDetailPage'))
-const RosterPage        = lazy(() => import('./pages/RosterPage'))
 const PlayerProfilePage = lazy(() => import('./pages/PlayerProfilePage'))
 const NewsPage          = lazy(() => import('./pages/NewsPage'))
 const NewsArticlePage   = lazy(() => import('./pages/NewsArticlePage'))
@@ -74,7 +75,6 @@ function AnimatedRoutes() {
         <Route path="/forgot-password" element={<PageTransition><ForgotPasswordPage /></PageTransition>} />
         <Route path="/teams"         element={<PageTransition><TeamsPage /></PageTransition>} />
         <Route path="/teams/:id"     element={<PageTransition><TeamDetailPage /></PageTransition>} />
-        <Route path="/roster"        element={<PageTransition><RosterPage /></PageTransition>} />
         <Route path="/roster/:id"    element={<PageTransition><PlayerProfilePage /></PageTransition>} />
         <Route path="/news"          element={<PageTransition><NewsPage /></PageTransition>} />
         <Route path="/news/:id" element={<PageTransition><NewsArticlePage /></PageTransition>} /> 
@@ -82,6 +82,8 @@ function AnimatedRoutes() {
         <Route path="/shop"          element={<PageTransition><ShopPage /></PageTransition>} />
         <Route path="/careers"       element={<PageTransition><CareersPage /></PageTransition>} />
         <Route path="/contact"       element={<PageTransition><ContactPage /></PageTransition>} />
+        <Route path="/creators"     element={<PageTransition><CreatorsPage /></PageTransition>} />
+        <Route path="/creators/:id" element={<PageTransition><CreatorProfilePage /></PageTransition>} />
         <Route path="/account" element={<PageTransition><AccountPage /></PageTransition>} /> 
         <Route path="/flame-society" element={<PageTransition><FlameSocietyPage /></PageTransition>} />
         <Route path="/membership/verify" element={<PageTransition><MembershipVerifyPage /></PageTransition>} />

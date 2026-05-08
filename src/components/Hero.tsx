@@ -1,14 +1,7 @@
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 
 export default function Hero() {
-  const scrollToNews = () => {
-    document.getElementById('latest-news')?.scrollIntoView({ behavior: 'smooth' })
-  }
-
-  const scrollToRoster = () => {
-    document.getElementById('roster')?.scrollIntoView({ behavior: 'smooth' })
-  }
-
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-sf-darker pt-17">
       {/* Animated background glow */}
@@ -98,22 +91,29 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.9 }}
         >
-          <motion.button
-            onClick={scrollToRoster}
+          <motion.div
             whileHover={{ scale: 1.05, boxShadow: '0 0 25px rgba(255,106,0,0.5)' }}
             whileTap={{ scale: 0.97 }}
-            className="inline-block px-9 py-3.5 bg-sf-orange text-white text-[12px] font-bold tracking-[0.12em] uppercase hover:bg-orange-500 transition-colors duration-200"
           >
-            Meet the Roster
-          </motion.button>
-          <motion.button
-            onClick={scrollToNews}
-            whileHover={{ scale: 1.05, borderColor: 'rgba(255,255,255,0.4)' }}
+            <Link
+              to="/flame-society"
+              className="inline-block px-9 py-3.5 bg-sf-orange text-white text-[12px] font-bold tracking-[0.12em] uppercase hover:bg-orange-500 transition-colors duration-200"
+            >
+              Join Flame Society
+            </Link>
+          </motion.div>
+
+          <motion.div
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.97 }}
-            className="inline-block px-9 py-3.5 text-sf-text text-[12px] font-bold tracking-[0.12em] uppercase border border-white/15 transition-colors duration-200"
           >
-            Latest News
-          </motion.button>
+            <Link
+              to="/login"
+              className="inline-block px-9 py-3.5 text-sf-text text-[12px] font-bold tracking-[0.12em] uppercase border border-white/15 hover:border-white/40 transition-colors duration-200"
+            >
+              Sign In
+            </Link>
+          </motion.div>
         </motion.div>
       </div>
 
@@ -124,4 +124,4 @@ export default function Hero() {
       />
     </section>
   )
-} 
+}

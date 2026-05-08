@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { api } from '../lib/api' 
+import { Sparkles } from 'lucide-react';
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
@@ -107,10 +108,10 @@ export default function NewsletterSignup() {
             {/* Perks */}
             <div className="flex flex-col gap-3">
               {[
-                { icon: '⚡', text: 'Match results & highlights every week' },
-                { icon: '👕', text: 'Early access to merch drops' },
-                { icon: '🔥', text: 'Flame Society member exclusives' },
-                { icon: '🎮', text: 'Tournament previews & predictions' },
+                { icon: <Sparkles className="text-[#ff6c00]" />, text: 'Match results & highlights every week' },
+                { icon: <Sparkles className="text-[#ff6c00]" />, text: 'Early access to merch drops' },
+                { icon: <Sparkles className="text-[#ff6c00]" />, text: 'Flame Society member exclusives' },
+                { icon: <Sparkles className="text-[#ff6c00]" />, text: 'Tournament previews & predictions' },
               ].map((perk) => (
                 <div key={perk.text} className="flex items-center gap-3">
                   <span className="text-[16px]">{perk.icon}</span>
@@ -153,7 +154,7 @@ export default function NewsletterSignup() {
                   Subscribe Free
                 </h3>
                 <p className="text-[13px] text-sf-muted mb-7">
-                  Join 12,000+ Solar Flare fans already subscribed.
+                  Join 1,000+ Solar Flare fans already subscribed.
                 </p>
 
                 {/* Email input */}

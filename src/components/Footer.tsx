@@ -4,18 +4,18 @@ import SlfLogo from '../assets/Logos/RedLogo.png';
 import { Link } from 'react-router-dom'
 
 const footerNav = {
-  Teams: [
-    { label: 'Free Fire',         href: '/teams/freefire' },
-    { label: 'Chess',href: '/teams/chess' },
-    { label: 'Efootball', href: '/teams/efootball' },
-    { label: 'EA FC 26', href: '/teams/fc' },
-  ],
+  //Teams: [
+  //  { label: 'Free Fire',         href: '/teams/freefire' },
+  //  { label: 'Chess',href: '/teams/chess' },
+  //  { label: 'Efootball', href: '/teams/efootball' },
+  //  { label: 'EA FC 26', href: '/teams/fc' },
+  //],
   Company: [
     { label: 'About Us',  href: '/about' },
     { label: 'Careers',   href: '/careers' },
-    { label: 'Press',     href: '/contact' },
+    { label: 'News',     href: '/news' },
     { label: 'Partners',  href: '/partners' },
-    { label: 'Contact',   href: '/contact' },
+    //{ label: 'Contact',   href: '/contact' },
   ],
   Community: [
     { label: 'Flame Society', href: '/flame-society' },
@@ -25,11 +25,11 @@ const footerNav = {
     { label: 'Gallery',       href: '/gallery' },
   ],
   Support: [
-    { label: 'FAQ',             href: '/contact' },
-    { label: 'Shipping Info',   href: '/contact' },
-    { label: 'Returns',         href: '/contact' },
-    { label: 'Size Guide',      href: '/shop' },
-    { label: 'Get in Touch',    href: '/contact' },
+    //{ label: 'FAQ',             href: '/contact' },
+    { label: 'Shipping Info',   href: '/shop' },
+    { label: 'Returns',         href: '/shop' },
+    //{ label: 'Size Guide',      href: '/shop' },
+    //{ label: 'Get in Touch',    href: '/contact' },
   ],
 }
 

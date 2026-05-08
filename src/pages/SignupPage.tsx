@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/useAuth'
 import SEO from '../components/SEO'
+import logo from '../assets/Logos/RedLogo.png'
 
 export default function SignupPage() {
   const [name,     setName]     = useState('')
@@ -55,15 +56,7 @@ export default function SignupPage() {
         <div className="relative w-full max-w-md">
           {/* Logo */}
           <div className="flex flex-col items-center mb-10">
-            <div
-              className="w-12 h-12 flex items-center justify-center text-white text-sm font-black mb-4"
-              style={{
-                background: 'linear-gradient(135deg, #FF6A00, #FFB800)',
-                clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-              }}
-            >
-              SF
-            </div>
+            <img src={logo} alt="Solar Flare Logo" className="w-12 h-12 mb-4" /> 
             <h1 className="font-condensed font-black text-[32px] uppercase text-sf-text">
               Join Solar Flare
             </h1>
